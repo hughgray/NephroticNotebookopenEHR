@@ -1,0 +1,104 @@
+<ion-content padding>
+
+        <h2 class='ion-header' style="padding-bottom: 8%">
+            My Treatment Plan
+        </h2>
+        
+        <h2 class='ion-header' style="padding-top: 10%">
+            Maintenance Dose
+        </h2>
+
+          <ion-grid>
+              <ion-row>
+              <ion-col>
+                  <h4>Amount:</h4>
+                  <h4>(mg)</h4>
+                  <h5><div class="rcorners1">{{ this.plan[0].amt }}</div></h5> 
+              </ion-col>
+              <ion-col>
+                  <h4>Duration:</h4>
+                  <h4>Until</h4>
+                  <h4>Otherwise</h4>
+              </ion-col>
+              <ion-col>
+                  <h4>Times:</h4>
+                  <h4>(per int)</h4>
+                  <h5><div class="rcorners1">{{ this.plan[0].pillno }}</div></h5>
+              </ion-col>
+              <ion-col>
+                  <h4>Interval:</h4>
+                  <h4>(days)</h4>
+                  <h5><div class="rcorners1">{{ this.plan[0].interval }}</div></h5>
+              </ion-col>
+              </ion-row>
+          </ion-grid>
+
+            <h2 class='ion-header' style="padding-top: 10%">
+                Relapse Plan
+            </h2>
+
+            <ion-grid>
+                <ion-row>
+                <ion-col>
+                    <h4>Amount:</h4>
+                    <h4>(mg)</h4>
+                    <h5><div class="rcorners1">{{ this.plan[1].amt }}</div></h5>
+
+                </ion-col>
+                <ion-col>
+                  <h4>Duration:</h4>
+                  <h4>Until</h4>
+                  <h4>Remission</h4>
+                </ion-col>
+                <ion-col>
+                    <h4>Times:</h4>
+                    <h4>(per int)</h4>
+                    <h5><div class="rcorners1">{{ this.plan[1].pillno }}</div></h5>
+                </ion-col>
+                <ion-col>
+                    <h4>Interval:</h4>
+                    <h4>(days)</h4>
+                    <h5><div class="rcorners1">{{ this.plan[1].interval }}</div></h5>
+                </ion-col>
+                </ion-row>
+            </ion-grid>
+            <h2 class='ion-header'  style="padding-top: 10%">
+                Remission Plan
+            </h2>
+            <ion-grid>
+                <ion-row>
+                <ion-col>
+                    <h4>Amount:</h4>
+                    <h4>(mg)</h4>
+                    <h5>
+                        <div *ngFor="let treatment of treatmentPlan" type="number"class="rcorners1">{{ treatment.amt }}</div>
+                    </h5>
+                </ion-col>
+                <ion-col>
+                    <h4>Duration:</h4>
+                    <h4>(days)</h4>
+                    <h5>
+                        <div *ngFor="let treatment of treatmentPlan" type="number"class="rcorners1">{{ treatment.dur }}</div>
+                    </h5>
+                </ion-col>
+                <ion-col>
+                    <h4>Times:</h4>
+                    <h4>(per int)</h4>
+                    <h5>
+                        <div *ngFor="let treatment of treatmentPlan" type="number"class="rcorners1">{{ treatment.pillno }}</div>
+                    </h5>
+                </ion-col>
+                <ion-col width="25%">
+                    <h4>Interval:</h4>
+                    <h4>(days)</h4>
+                    <h5>
+                        <div *ngFor="let treatment of treatmentPlan" type="number"class="rcorners1">{{ treatment.interval }}</div>
+                    </h5>
+                </ion-col>
+                </ion-row>
+            </ion-grid>
+
+            <div class="box">
+            <img class="bottom-right" src="../../../assets/buttons/newtreatmentplan.svg" routerDirection="forward" (click)="editPlan()">
+            </div>
+        </ion-content>

@@ -1,0 +1,7 @@
+{
+  "name": "myNephroticNotebook",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

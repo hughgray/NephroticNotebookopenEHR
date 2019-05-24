@@ -1,0 +1,12 @@
+
+<svg width="140px" height="140px" viewBox="0 0 140 140" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-2" stroke="#BAD36D">
+            <rect id="Rectangle-Copy-2" stroke-width="6" fill="#FFFFFF" x="3" y="3" width="134" height="134" rx="13"></rect>
+            <g id="traceSign" transform="translate(50.000000, 50.000000)" stroke-width="10">
+                <path d="M21.1833333,0 L21.1833333,41" id="Path-2"></path>
+                <path d="M41,6.15 L0,6.15" id="Path-2-Copy" transform="translate(20.500000, 6.150000) scale(1, -1) translate(-20.500000, -6.150000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

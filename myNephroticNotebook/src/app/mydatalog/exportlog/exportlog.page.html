@@ -1,0 +1,39 @@
+<ion-content padding>
+
+    <h2 class='ion-header' style="padding-top: 5%">
+        Export My Data Log
+    </h2>
+
+    <h3 style="padding-top: 8%">
+      Please choose the period of your data log you wish to export via email.
+    </h3>
+
+    <form [formGroup]="dataLogForm">
+    <h3><ion-label>Date From</ion-label></h3>
+    <h5><ion-datetime formControlName="dateFrom" display-format="DD MM YYYY" picker-format="DD MM YYYY" value="" class="rcorners"></ion-datetime></h5>
+    <div class="error-messages">
+      <ng-container *ngFor="let error of error_messages.dateFrom">
+        <div class="error-messages" *ngIf="profileForm.get('dateFrom').hasError(error.type) && (profileForm.get('dateFrom').dirty || profileForm.get('dateFrom').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+    </div>
+
+    <h3><ion-label>Date To</ion-label></h3>
+    <h5><ion-datetime formControlName="dateTo" display-format="DD MM YYYY" picker-format="DD MM YYYY" value="" class="rcorners"></ion-datetime></h5>
+    <div class="error-messages">
+      <ng-container *ngFor="let error of error_messages.dateTo">
+        <div class="error-messages" *ngIf="profileForm.get('dateTo').hasError(error.type) && (profileForm.get('dateTo').dirty || profileForm.get('dateTo').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+    </div>
+  </form>
+   <div class="box" style="padding-top: 5%">
+  <ion-button [disabled]="!dataLogForm.valid" position="center" shape="round" routerDirection="forward" (click)="submit()" >
+    <ion-icon slot="end" name="send"></ion-icon>
+  Compose email
+</ion-button>
+</div>
+
+</ion-content>

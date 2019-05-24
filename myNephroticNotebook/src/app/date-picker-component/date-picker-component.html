@@ -1,0 +1,342 @@
+<!-- This file date-picker-component.html is adopted from https://github.com/write2sv/ionic4-date-picker. Changes have been
+made on top of original source code to build functionalities and styles required for the app -->
+
+<body>
+    <div id="pre-content"></div>
+    <ion-content id="scrollArea">
+
+        <!--button for switching between dayview, monthview and yearview -->
+        <div *ngIf="showView === 'calendar'">
+
+            <ion-button fill="clear" (click)="showMonthView()" class="calendar-button">
+                Month View
+                <ion-icon name="arrow-dropdown"></ion-icon>
+            </ion-button>
+            <p>{{testing}}</p>
+            <!-- <ion-button fill="clear" [disabled]="!hasYearSelection()" (click)="showYearView()" class="calendar-button">
+            Select Year
+            <ion-icon name="arrow-dropdown"></ion-icon>
+        </ion-button> -->
+        </div>
+
+        <div *ngIf="showView === 'dayview'">
+
+            <ion-button fill="clear" (click)="selectMonth(monthSelected)" class="calendar-button">
+                Back to Month
+                <ion-icon name="arrow-dropdown"></ion-icon>
+            </ion-button>
+
+        </div>
+
+        <!-- //horizonal scrollbar for selecting months across years -->
+
+        <div class="scrolling-wrapper1" *ngIf="showView === 'calendar'" id="monthscroll">
+            <div class="card1" *ngFor="let year of years; let j = index">
+                {{year}}
+                <br>
+                <div class="card1" *ngFor="let m of monthLabels; let i = index; let islast=last;">
+                    <ion-button fill="clear" (click)="selectMonthnYear(i+1,year)" class="card2"
+                        [ngStyle]="m==monthLabels[monthSelected-1] && year==yearSelected && {'color':'#3A4046','background-color':'#A0CEED'} ||
+                                m==monthLabels[currentMonth-1] && year==currentYear &&{'color':'#3A4046','background-color':'#f2b747'}">
+                        {{m}}
+                    </ion-button>
+                </div>
+            </div>
+        </div>
+
+        <!-- //horizonal scrollbar for selecting days in a month -->
+
+        <div class="scrolling-wrapper1" *ngIf="showView === 'dayview'" id="dayscroll">
+            <div class="card1" *ngFor="let date of days_of_month; let i = index" style="text-align:center">
+                {{date.format("ddd")}}<br>
+                <ion-button fill="clear" (click)="selectDay(date)" class="card2" [ngStyle]="date.format('YYYY-MM-D')==daySelected.format('YYYY-MM-D') && {'color':'#3A4046','background-color':'#A0CEED'}||
+                date.format('YYYY-MM-D')==currentDate && {'color':'#3A4046','background-color':'#f2b747'}">
+                    {{date.format('D')}}
+                </ion-button>
+            </div>
+        </div>
+        <ion-card>
+            <!-- select underlined title to change month/year -->
+            <div *ngIf="showView === 'calendar'" style="text-align: center">
+                <ion-card-title>
+                    <span class="title-text" (click)="showMonthView()">{{monthLabels[monthSelected-1]}}</span>
+                    <span>&nbsp;</span>
+                    <span class="title-text" (click)="showYearView()">{{yearSelected}}</span>
+                </ion-card-title>
+
+                <!-- <span slot="end" *ngIf="hasPrevious() || hasNext()">
+                        <ion-button  fill="clear" [disabled]="!hasPrevious()" (click)="previous()">
+                        <ion-icon slot="icon-only" name="ios-arrow-back"></ion-icon>
+                        </ion-button>
+                        <ion-button fill="clear" [disabled]="!hasNext()" (click)="next()">
+                            <ion-icon slot="icon-only" name="ios-arrow-forward"></ion-icon>
+                        </ion-button>
+                </span> -->
+            </div>
+
+            <!-- default view: month view -->
+            <ion-grid *ngIf="showView === 'calendar'" [ngStyle]="backgroundStyle">
+                <ion-row [ngStyle]="{'height':'30px'}">
+                    <ion-col *ngFor="let daylabel of dayLabels" text-center [ngStyle]="dayLabelsStyle">
+                        {{daylabel}}
+                    </ion-col>
+                </ion-row>
+                <ion-row *ngFor="let week of weeks" [ngStyle]="{'height':'60px'}">
+                    <ion-col *ngFor="let day of week" (click)="CreateDayScrollBar(day);selectDay(day);" text-center>
+                        <button ion-button full
+                            [ngStyle]="day.inCalendar&&getDayStyle(day) || !day.inCalendar && notInCalendarStyle">{{isValidDay(day) ? day.dayOfMonth : '&nbsp;&nbsp;'}}</button>
+                        <!-- <span [ngStyle]="day.inCalendar&&getDayStyle(day) || !day.inCalendar && notInCalendarStyle">{{isValidDay(day) ? day.dayOfMonth : '&nbsp;&nbsp;'}}</span><br> -->
+                        <span [ngStyle]="getreading(day,'s')"><br>{{getreading(day,'')}}</span>
+                    </ion-col>
+                </ion-row>
+
+                <span (click)="showKeys()" id="key-button" style="text-align:left"> Keys: <ion-icon
+                        style="color:#297bd6;vertical-align: bottom;font-size:16px" name="arrow-dropdown"></ion-icon>
+                </span>
+            </ion-grid>
+
+            <!-- day view -->
+            <div *ngIf="showView === 'dayview'" style="color:#ffffff;font-size:20px;vertical-align: middle" text-center>
+                <div class="dayview-screen">
+                    <div class="top-container">
+                        <h2>
+                            {{daySelected_d}}
+                        </h2>
+                    </div>
+                    <div class="current-state-container">
+                        <h4 id="state_name">You were in {{ this.treatment_state }}</h4>
+                    </div>
+                    <div class="reading-container">
+                        <div class="reading-lhs-container">
+                            <img id="reading-square"
+                                src="../../assets/protein-level-square/{{ this.readingSquareIcon }}.svg">
+                        </div>
+                        <div class="reading-rhs-container">
+                            <!-- <div class="reading-rhs"> -->
+                            <div>
+                                <h4>{{ reading_text }}</h4>
+                            </div>
+                            <!-- </div> -->
+                        </div>
+                    </div>
+                    <div class="bottom-container">
+                        <div class="bot-mid-container">
+                            <!-- <h3>Medication</h3> -->
+                            <div class="dose-container">
+                                <div class="dose-lhs-container">
+                                    <div class="dose-rhs-top">
+                                        <div>
+                                            <h4>Medication</h4>
+                                            <p>{{ medication }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="dose-rhs-bot">
+                                        <img id="medsTick" src="../../assets/tickpng/{{ this.medImage }}.svg">
+                                    </div>
+                                </div>
+                                <div class="dose-rhs-container">
+                                    <img class="meds" src="../../../assets/icon/med.svg">
+                                </div>
+                            </div>
+                            <div class="view-comment-container">
+                                <div class="comment-formgroup">
+                                    <h4>Comment</h4>
+                                    <div class="comment-textarea">
+                                        {{ this.comments }}
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <h2>{{daySelected_d}}</h2>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col>
+                            <div class="square" [ngStyle]=square_color>
+                                <p><span id="square_text">{{reading}}</span></p>
+                            </div>
+                        </ion-col>
+                        <ion-col>
+                            <div style="float: left;">
+                            <br>
+                            {{reading_text}}
+                            <br>
+                            <span style="font-size:15px;">
+                            {{treatment_state}}
+                            </span>
+                            </div>
+                        </ion-col>
+                    </ion-row> -->
+            <!-- <span style="font-size: 14px"><br>Treatment Stage: <br></span>{{treatment_state}}<br> -->
+            <!-- <ion-row>
+                            <ion-col size="8">
+                                <br>
+                                <span style="font-size:14px">Prednisone Taken? </span>
+                                <img class="yesno-icon" id="yesicon" src="../assets/icon/yes.png">
+                                <img class="yesno-icon" id="noicon" src="../assets/icon/no.png">
+                                <br>
+                                {{medication}}
+                                <br>
+                                <span id="emoji-icon" style="font-size:50px"></span>
+                            </ion-col>
+                            <ion-col>
+                                <img id="medicine-icon" src="../assets/icon/medicine.svg">
+                            
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col>
+                                 <div id="comment-field">{{comments}}
+                                    <img id="comment-icon" src="../assets/icon/comment.png" onclick=""></div>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid> -->
+
+
+            <!-- <ion-button fill="solid" color="light" id="edit-button">
+                    <span style="color:#297bd6">Edit</span><img id="edit-icon" src="../assets/icon/edit.svg">
+                </ion-button> -->
+
+            <!-- selecting month -->
+            <ion-grid *ngIf="showView === 'month'" style="background-color: #ffffff">
+                <ion-row justify-content-end>
+                    <ion-col text-end>
+                        <ion-button fill="clear" (click)="resetView()">
+                            <ion-icon slot="icon-only" name="close"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col *ngFor="let monthLabel of monthLabels; let i = index" [ngStyle]="getMonthStyle(i)" size="3"
+                        (click)="selectMonth(i+1)" text-center>
+                        <span [class.invalidMonth]="!isValidMonth(i)">{{monthLabel}}</span>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+            <!-- selecting year -->
+            <ion-grid *ngIf="showView === 'year'" [ngStyle]="{'color':'#ffffff'}">
+                <ion-row>
+                    <ion-col size="10" text-center>
+                        <div *ngIf="hasPreviousYears() || hasNextYears()">
+                            <ion-button fill="clear" [disabled]="!hasPreviousYears()" (click)="showPreviousYears()">
+                                <ion-icon slot="icon-only" name="ios-arrow-back"></ion-icon>
+                            </ion-button>
+                            <span class="year-range">
+                                {{startYear}} to {{endYear}}
+                            </span>
+                            <ion-button fill="clear" [disabled]="!hasNextYears()" (click)="showNextYears()">
+                                <ion-icon slot="icon-only" name="ios-arrow-forward"></ion-icon>
+                            </ion-button>
+                        </div>
+                    </ion-col>
+                    <ion-col size="2" text-center>
+                        <ion-button fill="clear" (click)="resetView()">
+                            <ion-icon slot="icon-only" name="close"></ion-icon>
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col *ngFor="let year of years" [ngStyle]="getYearStyle(year)" size="3"
+                        (click)="selectYear(year)" text-center>
+                        {{year}}
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+            <!-- keys (lower bottom right) -->
+            <ion-grid *ngIf="showView === 'calendar'" id="calendar_keys">
+                <ion-row size="2" style="height:30px">
+                    <ion-col size="1">
+                        <img class="stage" src="../assets/img/backgrounds/red_circle.png" alt="Smiley face">
+                    </ion-col>
+                    <ion-col size="3">
+                        <span style="font-size:10px">Relapse</span>
+                    </ion-col>
+                    <ion-col size="1">
+                        <img class="stage" src="../assets/img/backgrounds/orange_circle.png" alt="Smiley face">
+                    </ion-col>
+                    <ion-col size="3">
+                        <span style="font-size:10px">Remission</span>
+                    </ion-col>
+                </ion-row>
+                <ion-row style="height:33.33%;">
+                    <ion-col text-center>
+                        <span style="font-size:10px;text-align:center;">NEGATIVE</span>
+                    </ion-col>
+                    <ion-col text-center>
+                        <span style="font-size:10px;text-align:center;">TRACE</span>
+                    </ion-col>
+                    <ion-col>
+                        <span style="font-size:10px;text-align:center;">mg/dL</span>
+                    </ion-col>
+                    <ion-col text-center>
+                        <span style="font-size:10px;text-align:center;">30</span>
+                    </ion-col>
+                    <ion-col text-center>
+                        <span style="font-size:10px;text-align:center;">100</span>
+                    </ion-col>
+                    <ion-col text-center>
+                        <span style="font-size:10px;text-align:center;">300</span>
+                    </ion-col>
+                    <ion-col text-center>
+                        <span style="font-size:10px;text-align:center;">2000+</span>
+                    </ion-col>
+                </ion-row>
+                <ion-row style="height:33.33%;">
+                    <ion-col text-center>
+                        <span style="color:#dce977">-</span>
+                    </ion-col>
+                    <ion-col text-center>
+                        <span style="color:#bad36d">T</span>
+                    </ion-col>
+                    <ion-col text-center>
+                    </ion-col>
+                    <ion-col text-center>
+                        <span style="color:#a5c177">+</span>
+                    </ion-col>
+                    <ion-col text-center>
+                        <span style="color:#90b991">++</span>
+                    </ion-col>
+                    <ion-col text-center>
+                        <span style="color:#70af9a">+++</span>
+                    </ion-col>
+                    <ion-col text-center>
+                        <span style="color:#599c8a">++++</span>
+                    </ion-col>
+                </ion-row>
+                <ion-row style="height:33.33%;">
+                    <ion-col>
+                        <div class="rectangle" style="background-color:#dce977"></div>
+                    </ion-col>
+                    <ion-col>
+                        <div class="rectangle" style="background-color:#bad36d"></div>
+                    </ion-col>
+                    <ion-col>
+                    </ion-col>
+                    <ion-col>
+                        <div class="rectangle" style="background-color:#a5c177"></div>
+                    </ion-col>
+                    <ion-col>
+                        <div class="rectangle" style="background-color:#90b991"></div>
+                    </ion-col>
+                    <ion-col>
+                        <div class="rectangle" style="background-color:#70af9a"></div>
+                    </ion-col>
+                    <ion-col>
+                        <div class="rectangle" style="background-color:#599c8a"></div>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+        </ion-card>
+
+
+
+    </ion-content>
+</body>

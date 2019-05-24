@@ -1,0 +1,179 @@
+.top-container {
+    padding: 5%;
+}
+
+.ion-header {
+    // padding-bottom: 2%;
+    // padding-top: 1%;
+}
+
+.upper-mid-container {
+    padding: 5%;
+    width: 100%;
+    display: flex;
+}
+
+.umid-con-lhs {
+    // background-color: red;
+    padding: 1px;
+    width: 70%;
+}
+
+.umid-con-rhs {
+    // background-color: black;
+    width: 30%;
+    display: flex;
+    padding: 2%;
+}
+
+#checked-tick {
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.lower-mid-container {
+    width:100%;
+}
+
+.current-state-container {
+    padding: 0% 5%;
+}
+
+.todays-reading-container {
+    // background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2%;
+}
+
+#reading-square {
+    width: 50%;
+}
+
+
+.bottom-container {
+    // align-items: center;
+    // background-color: black;
+    width: 100%;
+    flex-grow: 1;
+    padding-top: 2%;
+    padding-bottom: 5%;
+}
+
+.bot-mid-container {
+    // background-color: black;
+    // height: 85%;
+    width: 100%;
+    padding: 5%;
+}
+
+.dose-container {
+    height: 50%;
+    width: 100%;
+    margin-top: 5%;
+}
+
+.dose-lhs-container {
+    display: flex;
+    width: 50%;
+    height: 100%;
+    float: left;
+    // background-color: black;
+    text-align: center;
+    justify-content: center;
+}
+
+.meds {
+
+}
+
+.dose-rhs-container {
+    width: 50%;
+    height: 100%;
+    margin-left: 50%;
+}
+
+.dose-rhs-top {
+    display: flex;
+    height: 50%;
+    width: 100%;
+    text-align: flex-end;
+    justify-content: center;
+    // background-color: black;
+
+    h2 {
+        align-self: flex-end;
+    }
+}
+
+.dose-rhs-bot {
+    // display: flex;
+    height: 50%;
+    width: 100%;
+    align-items: flex-start;
+    text-align: center;
+}
+
+.view-comment-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10%;
+    // background-color: red;
+}
+
+.leave-comm-btn {
+    align-items: center;
+    justify-content: center;
+}
+
+.comment-formgroup {
+    justify-content: center;
+    text-align: center;
+    padding: 5%;
+    width: 100%;
+    padding: 2% 2% 0% 2%;
+    // background-color: white;
+    // display: flex;
+}
+
+.comment-textarea {
+    // align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+    padding: 5%;
+}
+
+.footer-container {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+.footer-lhs {
+    padding: 2%;
+    width: 50%;
+    height: 100%;
+    float: left;
+}
+
+.footer-rhs {
+    padding: 2%;
+    text-align: right;
+    width: 50%;
+    height: 100%;
+    margin-left: 50%;
+}
+
+.edit-container {
+    width: 100%;
+    padding-top: 10%;
+    display: flex;
+    justify-content: center;
+}

@@ -1,0 +1,61 @@
+<ion-content padding>
+
+    <h2 class='ion-header' style="padding-bottom: 8%">
+        Edit Your Details
+    </h2>
+    <form [formGroup]="profileForm">
+    <h3><ion-label>Your Name</ion-label></h3> 
+    <h5><input formControlName="myName" type="text" class="rcorners" clearInput="true"></h5>
+    <div class="error-messages">
+      <ng-container *ngFor="let error of error_messages.myName">
+        <div class="error-messages" *ngIf="profileForm.get('myName').hasError(error.type) && (profileForm.get('myName').dirty || profileForm.get('myName').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+    </div>
+
+    <h3><ion-label>Your Doctor</ion-label></h3>
+    <h5><input formControlName="myDoctor" type="text" value=""class="rcorners" clearInput="true"></h5>
+    <div class="error-messages">
+      <ng-container *ngFor="let error of error_messages.myDoctor">
+        <div class="error-messages" *ngIf="profileForm.get('myDoctor').hasError(error.type) && (profileForm.get('myDoctor').dirty || profileForm.get('myDoctor').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+    </div>
+
+    <h3><ion-label>Your Doctor's Number</ion-label></h3>
+    <h5><input formControlName="myDoctorsNumber" type="text" value="" class="rcorners" clearInput="true"></h5>
+    <div class="error-messages">
+      <ng-container *ngFor="let error of error_messages.myDoctorsNumber">
+        <div class="error-messages" *ngIf="profileForm.get('myDoctorsNumber').hasError(error.type) && (profileForm.get('myDoctorsNumber').dirty || profileForm.get('myDoctorsNumber').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+    </div>
+
+    <h3><ion-label>Your Birthday</ion-label></h3>
+    <h5><ion-datetime formControlName="myBirthday" display-format="DD MM YYYY" picker-format="DD MM YYYY" value="" class="rcorners"></ion-datetime></h5>
+    <div class="error-messages">
+      <ng-container *ngFor="let error of error_messages.myBirthday">
+        <div class="error-messages" *ngIf="profileForm.get('myBirthday').hasError(error.type) && (profileForm.get('myBirthday').dirty || profileForm.get('myBirthday').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+    </div>
+
+    <h3><ion-label>Your Other Medication</ion-label></h3>
+    <ion-textarea formControlName="myOtherMeds" type="text" value="" class="rcornersbox" style="padding-bottom: 10%" clearInput="true">
+      </ion-textarea>
+    </form>
+
+    <div class="box">
+      <ion-button size="small" shape="round" routerDirection="backward" (click)="goBack()">
+              Cancel
+      </ion-button>
+      <ion-button [disabled]="!profileForm.valid" class="bottom-right" size="small" shape="round" routerDirection="forward" (click)="addToDB()">
+        Confirm
+      </ion-button>
+    </div>
+
+</ion-content>

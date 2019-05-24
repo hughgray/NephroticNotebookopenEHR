@@ -1,0 +1,48 @@
+
+<ion-content padding>
+
+  <h2 class='ion-header' style="padding-bottom: 5%" style="padding-top: 5%">
+      My Data Log
+  </h2>
+  <ion-grid>
+      <ion-row>
+      <ion-col>
+          <h4>Date</h4>
+      </ion-col>
+      <ion-col>
+          <h4>Reading</h4>
+      </ion-col>
+      <ion-col>
+          <h4>Meds Taken</h4>
+      </ion-col>
+      </ion-row>
+  </ion-grid>
+  
+  <div class="display" scrollY="true">
+  <ion-grid>
+      <ion-row>
+      <ion-col>
+          <h5>
+              <div *ngFor="let data of data_log" type="number" >{{ data.date }}</div>
+          </h5>
+      </ion-col>
+      <ion-col>
+          <h5>
+              <div *ngFor="let data of data_log" type="number" >{{ data.symbol }}</div>
+          </h5>
+      </ion-col>
+      <ion-col>
+          <h5>
+              <div *ngFor="let data of data_log" type="number">{{ data.meds_taken }}</div>
+          </h5>
+      </ion-col>
+      </ion-row>
+  </ion-grid>
+</div>
+
+<div class="box">
+    <img class="bottom-right" src="../../../assets/buttons/export.svg"  routerDirection="forward" (click)="exportDataLog()">
+</div>
+
+
+</ion-content>

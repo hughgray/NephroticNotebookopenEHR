@@ -1,0 +1,475 @@
+// This file date-picker-component.html is adopted from https://github.com/write2sv/ionic4-date-picker. Changes have been
+// made on top of original source code to build functionalities and styles required for the app
+//content style
+.item {
+  .item-inner {
+    border-bottom: none !important;
+  }
+}
+
+#pre-content{
+  height:10px;
+  background-color:#4c8dff;
+}
+
+ion-icon {
+  font-size: 25px;
+  padding:0px;
+  margin:0px;
+  color:white;
+}
+
+
+ion-card{
+  width:100%;
+  margin:0;
+
+}
+
+//default image style
+// img{
+//   height:20px;
+//   width:20px;
+//   background-color:#ffffff;
+//   margin: 5px;
+// }
+
+//daily view
+.square{
+  height: 90px;
+  width: 90px;
+  align-items:center;
+  text-align:center;
+  background-color:#ffffff;
+  border:2px solid #ffffff;
+  border-radius:15px;
+  margin: auto;
+}
+
+#square_text{
+  margin:auto;
+  text-align:center;
+  font-size: 27px;
+}
+
+.yesno-icon{
+border-radius: 50%;
+height: 25px;
+width: 25px;
+vertical-align: bottom;
+margin:0px;
+background-color:#ffffff;
+}
+
+#medicine-icon{
+width:100%; 
+height:100%; 
+// background-color:#4c8dff;
+margin:5px;
+}
+
+#comment-field{
+background-color: #ffffff;
+color: #297bd6;
+border-radius: 15px;
+font-size:16px;
+text-align:center;
+align-items:center;
+height:80px;
+width:300px;
+margin:auto;
+
+}
+#comment-icon{
+  float:right;
+  width:40px; 
+  height:40px; 
+  margin: 5px;
+}
+
+#edit-button{
+width:80px;
+height:30px;
+border-radius:15px;
+border:none;
+margin:10px;
+}
+
+#edit-icon{
+height:20px;
+width:20px;
+display: block;
+border:none;
+margin:5px;
+}
+
+
+//title style
+ion-card-title{
+color: #ffffff;
+font-size:25px;
+margin:8px;
+}
+
+.title-text{
+color: #ffffff;
+padding:10px 0px 0px 0px;
+text-decoration: underline;
+}
+.title-text:hover{
+  color: #c6ddee;
+}
+
+
+.year-range {
+font-size: 15px;
+text-align: center;
+font-weight: 550;
+color:#ffffff;
+}
+
+
+.calendar-button {
+color: #ffffff;
+// background-color: #3880ff;
+position: relative;
+text-align:center;
+width:100%;
+padding: 10px 0px 0px 0px;
+font-size:14px;
+margin:10px 0px 0px 0px;
+}
+
+
+//calendar keys
+#calendar_keys{
+vertical-align: bottom;
+background-color: #ffffff;
+}
+
+#key-button{
+color: #297bd6;
+position:relative;
+text-align:left;
+font-size:12px;
+padding: 0%;
+width:100%;
+}
+
+#stage{
+border-radius: 50%;
+float:left;
+vertical-align: middle;
+}
+
+.rectangle {
+height: 5px;
+width: 10px;
+vertical-align: middle;
+margin:auto;
+}
+
+//text display in calendar
+.invalidMonth {
+color: #8b8b8b
+}
+
+//style for the monthly and daily horizontal scrollbars
+
+.scrolling-wrapper1 {
+overflow-x: scroll;
+overflow-y: hidden;
+white-space: nowrap;
+-webkit-overflow-scrolling: touch;
+&::-webkit-scrollbar {
+  display: none;
+}
+background-color: #ffffff;
+margin:0px;
+padding:0px;
+scroll-behavior: auto;
+
+.card1 {
+  display: inline-block;
+  color: #BCB2B2;
+  font-size:11px;
+  background-color: #ffffff;
+  .card2{
+    color:#8b8b8b;
+    font-size:13px;
+    border-radius:50%;
+    width:40px;
+    height:25px;
+  }
+}
+
+}
+
+.top-container {
+  padding: 2%;
+}
+
+.upper-mid-container {
+  padding: 5%;
+  width: 100%;
+  display: flex;
+}
+
+.umid-con-lhs {
+  // background-color: red;
+  padding: 1px;
+  width: 70%;
+}
+
+.umid-con-rhs {
+  // background-color: black;
+  width: 30%;
+  display: flex;
+  padding: 2%;
+}
+
+#checked-tick {
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.lower-mid-container {
+  // background-color: yellow;
+  overflow: auto;
+  // height: 85%;
+  width: 100%;
+  padding: 3%;
+}
+
+.reading-container {
+  // height: %;
+  overflow: auto;
+  // background-color: red;
+  width: 100%;
+  padding: 5%;
+  display: flex;
+  flex-direction: row;
+}
+
+.reading-lhs-container {
+  // background-color: green;
+  display: flex;
+  width: 50%;
+  height: 100%;
+  // float: left;
+  // background-color: black;
+  text-align: center;
+  justify-content: center;
+}
+
+#reading-square {
+  height:80%;
+  width: 80%;
+}
+
+.reading-rhs-container {
+  // background-color: black;
+  width: 50%;
+  // height: 100%;
+  // margin-left: 50%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+
+  h3 {
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// .reading-rhs-top {
+//   display: flex;
+//   height: 50%;
+//   width: 100%;
+//   text-align: flex-end;
+//   justify-content: center;
+//   // background-color: black;
+
+//   h2 {
+//       align-self: flex-end;
+//   }
+// }
+
+.reading-rhs {
+  // display: flex;
+  // background-color: black;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3%;
+}
+
+.medsTick {
+  transform: 0.5;
+}
+
+.current-state-container {
+  padding: 0% 5%;
+}
+
+.todays-reading-container {
+  // background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // width: 100%;
+  padding: 2%;
+}
+
+.bottom-container {
+  // align-items: center;
+  // background-color: black;
+  width: 100%;
+  flex-grow: 1;
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+
+.bot-mid-container {
+  // background-color: red;
+  height: 50%;
+  width: 100%;
+  padding: 0% 5%;
+}
+
+.dose-container {
+  // background-color: red;
+  // height: 50%;
+  // width: 100%;
+  margin-top: 5%;
+  display: flex;
+  flex-direction: row;
+  padding: 2%;
+}
+
+.dose-lhs-container {
+  // background-color: black;
+  width: 50%;
+  height: 100%;
+  // background-color: black;
+  align-items: center;
+  justify-content: center;
+}
+
+.dose-rhs-container {
+  // background-color: green;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  align-items: center;
+  justify-content: center;
+  // height: 100%;
+  // overflow: hidden;
+  // margin-left: 50%;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.dose-rhs-top {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  height: 50%;
+  // width: 100%;
+  // background-color: black;
+
+  h4 {
+      // align-self: flex-end;
+      font-size: 16;
+  }
+
+  p {
+    font-size: 12;
+  }
+}
+
+.dose-rhs-bot {
+  // background-color: yellow;
+  display: flex;
+  height: 50%;
+  // width: 100%;
+  // align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+#medsTick {
+  height: 50px;
+  width: 50px;
+}
+
+.view-comment-container {
+  // background-color: black;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2%;
+  // padding-bottom: 5%;
+  // background-color: red;
+}
+
+.leave-comm-btn {
+  align-items: center;
+  justify-content: center;
+}
+
+.comment-formgroup {
+  justify-content: center;
+  text-align: center;
+  padding: 2% 2% 0% 2%;
+  width: 100%;
+  // background-color: white;
+  // display: flex;
+}
+
+.comment-textarea {
+  // align-items: center;
+  color: black;
+  justify-content: center;
+  font-size: 16px;
+  width: 100%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 5%;
+}
+
+.footer-container {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
+.footer-lhs {
+  padding: 2%;
+  width: 50%;
+  height: 100%;
+  float: left;
+}
+
+.footer-rhs {
+  padding: 2%;
+  text-align: right;
+  width: 50%;
+  height: 100%;
+  margin-left: 50%;
+}
+
+.edit-container {
+  width: 100%;
+  padding-top: 10%;
+  display: flex;
+  justify-content: center;
+}

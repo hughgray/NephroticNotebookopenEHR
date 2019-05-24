@@ -1,0 +1,30 @@
+<ion-content padding>
+
+    <h1 class='ion-header' style="padding-bottom: 10%">
+        Profile
+    </h1>
+    
+  <ion-grid>
+      <ion-row>
+          <ion-col margin-bottom>
+            <div>
+                <ion-button shape="round" expand="block" color="primary" 
+                size="large" routerDirection="forward" (click)="openMyDetails()" >My Details</ion-button>
+            </div>
+          </ion-col>
+          <ion-col margin-bottom>
+              <div>
+                  <ion-button shape="round" expand="block" color="primary" 
+                  size="large" routerDirection="forward" (click)="openMyTreatmentPlan()">My Treatment Plan</ion-button>
+              </div>
+            </ion-col>
+            <ion-col margin-bottom>
+                <div>
+                    <ion-button shape="round" expand="block" color="primary" 
+                    size="large" routerDirection="forward" (click)="openMyDataLog()">My Data Log</ion-button>
+                </div>
+              </ion-col>
+        </ion-row>
+      </ion-grid>
+
+</ion-content>

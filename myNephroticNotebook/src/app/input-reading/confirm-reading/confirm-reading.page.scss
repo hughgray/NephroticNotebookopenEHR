@@ -1,0 +1,156 @@
+.entire-screen {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    width: 100%;
+}
+
+.top-container {
+    width: 100%;
+    padding: 5% 5% 5% 5%;
+    // display: flex;
+}
+
+.protein-level-box {
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    border: 6px solid;
+    border-radius: 13px;
+    margin: auto;
+    margin-top: 5%;
+    padding: 2%;
+    height: 100%;
+    width: 100%;
+}
+
+.box-txt {
+    color: black;
+    text-align: center;
+    font-size: 20px;
+}
+
+.reading-desc {
+    p {
+        color: black;
+    }
+}
+
+.protein-sym-container {
+    // background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    margin-bottom: 10px;
+    padding: 2%;
+}
+
+.protein-sym {
+    align-items: center;
+    background-color: white;
+    display: block;
+    margin: auto;
+}
+
+.bottom-container {
+    // align-items: center;
+    // background-color: black;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.bot-mid-container {
+    // background-color: black;
+    // height: 85%;
+    width: 100%;
+    padding: 5%;
+}
+
+.dose-container {
+    height: 50%;
+    width: 100%;
+    margin-top: 5%;
+}
+
+.dose-lhs-container {
+    display: flex;
+    width: 50%;
+    height: 100%;
+    float: left;
+    // background-color: black;
+    text-align: center;
+    justify-content: center;
+}
+
+.dose-rhs-container {
+    width: 50%;
+    height: 100%;
+    margin-left: 50%;
+}
+
+.dose-rhs-top {
+    display: flex;
+    height: 50%;
+    width: 100%;
+    text-align: flex-end;
+    justify-content: center;
+    // background-color: black;
+
+    h2 {
+        align-self: flex-end;
+    }
+}
+
+.dose-rhs-bot {
+    // display: flex;
+    height: 50%;
+    width: 100%;
+    align-items: flex-start;
+    text-align: center;
+}
+
+.leave-comment-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10%;
+}
+
+.leave-comm-btn {
+    align-items: center;
+    justify-content: center;
+}
+
+.comment-formgroup {
+    text-align: center;
+    color: white;
+
+    textarea {
+        border-radius: 10px;
+    }
+}
+
+.comment-textarea {
+    width: 90%;
+    color: black;
+}
+
+.footer-container {
+    width: 100%;
+    padding: 2%;
+}
+
+.footer-lhs {
+    padding: 2%;
+    width: 50%;
+    float: left;
+}
+
+.footer-rhs {
+    padding: 2%;
+    text-align: right;
+    width: 50%;
+    margin-left: 50%;
+}

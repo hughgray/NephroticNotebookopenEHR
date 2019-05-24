@@ -1,0 +1,15 @@
+
+<svg width="55px" height="55px" viewBox="0 0 55 55" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-8-Copy">
+            <g id="Tick-Copy-2">
+                <ellipse id="Oval" stroke="#979797" fill="#FFFFFF" cx="27.6095618" cy="27.6095618" rx="24.1035857" ry="23.4462151"></ellipse>
+                <g id="checked" fill="#D0021B" fill-rule="nonzero">
+                    <path d="M27.5,0 C12.3128864,0 0,12.3123708 0,27.5 C0,42.6876292 12.3128864,55 27.5,55 C42.6887894,55 55,42.6876292 55,27.5 C55,12.3123708 42.6882737,0 27.5,0 Z" id="Shape"></path>
+                </g>
+            </g>
+            <path d="M39,17 C39,17 34.8024047,21.1975953 26.407214,29.592786 C24.6064267,31.3935733 21.4706887,34.5293113 17,39" id="Path-5" stroke="#FFFFFF" stroke-width="6"></path>
+            <path d="M39,17 C39,17 34.8024047,21.1975953 26.407214,29.592786 C24.6064267,31.3935733 21.4706887,34.5293113 17,39" id="Path-5-Copy" stroke="#FFFFFF" stroke-width="6" transform="translate(28.000000, 28.000000) rotate(90.000000) translate(-28.000000, -28.000000) "></path>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,27 @@
+
+<ion-content padding>
+
+    <h2 class='ion-header' style="padding-bottom: 8%">
+        My Details
+    </h2>
+
+      <h3><ion-label>My Name</ion-label></h3> 
+      <h5><div *ngFor="let data of myDetails" class="rcorners">{{ data.name }}</div></h5>
+
+      <h3><ion-label>My Doctor</ion-label></h3>
+      <h5><div *ngFor="let data of myDetails" class="rcorners">{{ data.doc }}</div></h5>
+  
+      <h3><ion-label>My Doctor's Number</ion-label></h3>
+      <h5><div *ngFor="let data of myDetails" class="rcorners">{{ data.num }}</div></h5>
+
+      <h3><ion-label>My Birthday</ion-label></h3>
+      <h5><div class="rcorners">{{ this.myBirthday.date }}</div></h5>
+
+      <h3><ion-label>My Other Medication</ion-label></h3>
+      <h5><div style="margin-bottom: 10%" *ngFor="let data of myDetails" class="rcorners">{{ data.othermeds }}</div></h5>
+
+      <div class="box">
+        <img src="../../../assets/buttons/back-btn.svg" alt="Back" (click)="goBack()">
+        <img class="bottom-right" src="../../../assets/buttons/edit.svg"  routerDirection="forward" (click)="editDetails()">
+        </div>
+</ion-content>

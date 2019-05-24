@@ -1,0 +1,21 @@
+
+<ion-content padding>
+
+  <h2 class='ion-header' style="padding-bottom: 8%">
+      Other Medication
+  </h2>
+  <h3 style="padding-bottom: 10%">
+      You can list any other medications and dosages you take here if you want!
+  </h3>
+
+  <ion-textarea [(ngModel)]="myMeds" type="text" value="" class="rcornersbox" clearInput="true">
+    </ion-textarea>
+
+  <div class="box">
+    <ion-button class="bottom-right" size="small" shape="round" (click)="addToDB()">
+        <ion-icon slot="end" name="arrow-round-forward"></ion-icon>
+        Finish
+    </ion-button>
+    </div>
+
+</ion-content>

@@ -1,0 +1,13 @@
+
+<svg width="82px" height="82px" viewBox="0 0 82 82" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="HomePost" transform="translate(-263.000000, -185.000000)">
+            <g id="Tick" transform="translate(263.000000, 185.000000)">
+                <ellipse id="Oval" stroke="#979797" fill="#FFFFFF" cx="41" cy="41" rx="36" ry="35"></ellipse>
+                <g id="checked" fill="#6AC259" fill-rule="nonzero">
+                    <path d="M41,0 C18.3573943,0 0,18.3566256 0,41 C0,63.6433744 18.3573943,82 41,82 C63.6451041,82 82,63.6433744 82,41 C82,18.3566256 63.6443354,0 41,0 Z M33.4789226,62.0609001 L15.4257616,44.0085078 L21.4429694,37.9913 L33.4789226,50.0264844 L60.5570306,22.9476077 L66.5742384,28.9648156 L33.4789226,62.0609001 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

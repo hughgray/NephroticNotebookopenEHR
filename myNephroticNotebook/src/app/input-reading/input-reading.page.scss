@@ -1,0 +1,116 @@
+.entire-screen {
+    height: 100%;
+    width: 100%;
+}
+
+.stick-container {
+    height: 100%;
+    width: 40%;
+    text-align: center;
+    padding: 20% 8% 8% 8%;
+    float: left;
+}
+
+.outer-stick {
+    background: #FFFFFF;
+    border: 1px solid #979797;
+    border-radius: 55px;
+    padding: 30% 0;
+    margin: auto;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.right-side-container {
+    margin-left: 35%;
+    height: 100%;
+    padding: 10% 5%;
+}
+
+.right-side-header {
+    margin: 10% 0;
+}
+
+.neg {
+    background-color: #DCE977;
+    height: 10%;
+    width: 60%;
+    margin: auto;
+}
+
+.trace {
+    background-color: #BAD36D;
+    height: 10%;
+    width: 60%;
+    margin: auto;
+}
+
+.onep {
+    background-color: #A5C177;
+    height: 10%;
+    width: 60%;
+    margin: auto;
+}
+
+.twop {
+    background-color: #90B991;
+    height: 10%;
+    width: 60%;
+    margin: auto;
+}
+
+.threep {
+    background-color: #70AF9A;
+    height: 10%;
+    width: 60%;
+    margin: auto;
+}
+
+.fourp {
+    background-color: #599C8A;
+    height: 10%;
+    width: 60%;
+    margin: auto;
+}
+
+.tap-left-outer-container {
+    display: flex;
+    align-items: center;
+    height: 70%;
+    
+}
+
+.tap-left-inner-container {
+    margin: auto;
+    margin-left: 0;
+}
+
+.tap-left {
+    top: 0; bottom: 0; left: 0; right: 0;
+    margin: auto;
+    animation-name: pulsate;
+    animation-duration: 3s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease;
+}
+
+.footer-container {
+    width: 100%;
+    padding: 2%;
+}
+
+.footer-lhs {
+    padding: 2%;
+    width: 50%;
+    float: left;
+}
+
+.footer-rhs {
+    padding: 2%;
+    text-align: right;
+    width: 50%;
+    margin-left: 50%;
+}

@@ -1,0 +1,61 @@
+<ion-content>
+  <div class="entire-screen">
+    <div class="top-container">
+      <div class="protein-level-box {{ proteinColorClass }}">
+        <h4 class="box-txt">Protein level is {{ proteinReading }}</h4>
+        <div class="protein-sym-container">
+          <img class="protein-sym" src="../../../assets/icon/protein-symbols/{{ proteinSymb }}">
+        </div>
+        <div class="reading-desc">
+          <p>You are in {{ this.stateName }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-container">
+      <div class="bot-mid-container">
+        <h4>Recommended Dose of Prednisone</h4>
+        <p *ngIf="intervalLen != 1">Your treatment plan indicates this recommended dosage should be taken every
+          {{ intervalLen }} days.</p>
+        <p *ngIf="intervalLen == 1">Your treatment plan indicates this recommended dosage should be taken every day.</p>
+        <div class="dose-container">
+          <div class="dose-lhs-container">
+            <img class="meds" src="../../../assets/icon/med.svg">
+          </div>
+          <div class="dose-rhs-container">
+            <div class="dose-rhs-top">
+              <h2>{{ reccDose }}mg x {{ dosesPerInterval }}</h2>
+            </div>
+            <div class="dose-rhs-bot">
+              <img (click)="this.confirmMedsTaken()" id="confirmMeds"
+                src="../../../assets/buttons/confirm-taken-btn.svg">
+              <img (click)="this.cancelMedsTaken()" id="cancelMeds" src="../../../assets/buttons/confirm-taken-tick.svg"
+                style="display: none">
+            </div>
+          </div>
+        </div>
+        <div class="leave-comment-container">
+          <form style="width: 100%">
+            <div class="form-group comment-formgroup">
+              <input type="hidden" id="readingLevel" name="readingLevel" value="{{ readingLevel }}">
+              <input type="hidden" id="wasMedTaken" name="wasMedTaken" value="{{ readingLevel }}">
+              <label for="comment">
+                <p>Add a Comment</p>
+              </label>
+              <textarea [(ngModel)]="user_comment" name="comment" id="comment" rows="5"
+                class="comment-textarea"></textarea>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="footer-container">
+      <div class="footer-lhs">
+        <img src="../../../assets/buttons/back-btn.svg" alt="Back" (click)="goBack()">
+      </div>
+      <div class="footer-rhs">
+        <img src="../../../assets/buttons/confirm-btn.svg" alt="Confirm" (click)="addReadingToDB()">
+      </div>
+    </div>
+  </div>
+</ion-content>

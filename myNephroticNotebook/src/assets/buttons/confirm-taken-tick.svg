@@ -1,0 +1,16 @@
+
+<svg width="122px" height="46px" viewBox="0 0 122 46" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ConfirmedTakenTick">
+            <g id="Next-Btn-Copy" fill="#6AC259" stroke="#6AC259">
+                <rect id="Rectangle" x="0.5" y="0.5" width="121" height="45" rx="21.5"></rect>
+            </g>
+            <g id="Tick-Copy" transform="translate(38.000000, 0.000000)">
+                <ellipse id="Oval" stroke="#979797" fill="#FFFFFF" cx="23" cy="23.5" rx="20" ry="19.5"></ellipse>
+                <g id="checked" fill="#6AC259" fill-rule="nonzero">
+                    <path d="M23,0 C10.2980505,0 0,10.2976192 0,23 C0,35.7023808 10.2980505,46 23,46 C35.7033511,46 46,35.7023808 46,23 C46,10.2976192 35.7029198,0 23,0 Z M18.780859,34.8146513 L8.65347602,24.6876995 L12.0289829,21.3121927 L18.780859,28.0636376 L33.9710171,12.8730482 L37.346524,16.2485551 L18.780859,34.8146513 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

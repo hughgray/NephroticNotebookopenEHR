@@ -1,0 +1,28 @@
+<ion-content>
+<div class="entire-screen">
+  <div class='stick-container'>
+    <div class='outer-stick'>
+      <div class="neg" (click)='goToConfirmReading($event)'></div>
+      <div class="trace" (click)='goToConfirmReading($event)'></div>
+      <div class="onep" (click)='goToConfirmReading($event)'></div>
+      <div class="twop" (click)='goToConfirmReading($event)'></div>
+      <div class="threep" (click)='goToConfirmReading($event)'></div>
+      <div class="fourp" (click)='goToConfirmReading($event)'></div>
+    </div>
+  </div>
+  <div class="right-side-container">
+    <div class="right-side-header">
+      <h3>Select Protein Level</h3>
+    </div>
+    <div class="tap-left-outer-container">
+      <div class="tap-left-inner-container">
+        <img src="../../assets/icon/tap-left.svg" alt="Tap here" class="tap-left">
+      </div>
+    </div>
+    <div style="text-align: center">
+      <img src="../../assets/buttons/back-btn.svg" alt="Back" (click)="goBack()">
+    </div>
+  </div>
+</div>
+</ion-content>
+

@@ -1,0 +1,209 @@
+<ion-content padding>
+
+  <h2 class='ion-header' style="padding-bottom: 8%">
+      My Treatment Plan
+  </h2>
+  <h3 style="padding-bottom: 10%">
+      Next we need you to enter your Prednisolone treatment plan.
+      You will need your doctor to complete this step for you.
+      Fill in all dosages in milligrams.
+  </h3>
+  
+  <h2 class='ion-header' style="padding-bottom: 8%">
+      Maintenance Dose
+  </h2>
+  
+  <form [formGroup]="treatmentForm" novalidate (ngSubmit)="save(treatmentForm)"> 
+    <ion-grid>
+        <ion-row>
+        <ion-col>
+            <h4>Amount:</h4>
+            <h4>(mg)</h4>
+            <h5>
+                <input formControlName="maintenanceDose" type="number" class="rcorners1">
+            </h5>
+        </ion-col>
+        <ion-col>
+            <h4>Duration:</h4>
+            <h4>Until</h4>
+            <h4>Otherwise</h4>
+        </ion-col>
+        <ion-col>
+            <h4>Times:</h4>
+            <h4>(per int)</h4>
+            <h5>
+                <input formControlName="maintenanceTimes" type="number" value="" class="rcorners1">
+            </h5>
+        </ion-col>
+        <ion-col>
+            <h4>Interval:</h4>
+            <h4>(days)</h4>
+            <h5>
+                <input formControlName="maintenanceInterval" type="number" value="" class="rcorners1">
+            </h5>
+        </ion-col>
+        </ion-row>
+    </ion-grid>
+    <div class="error-messages">
+            <ng-container *ngFor="let error of error_messages.maintenanceDose">
+              <div class="error-messages" *ngIf="treatmentForm.get('maintenanceDose').hasError(error.type) && (treatmentForm.get('maintenanceDose').dirty || treatmentForm.get('maintenanceDose').touched)">
+                {{ error.message }}
+              </div>
+            </ng-container>
+    </div>
+      <h3 style="padding-bottom: 10%">
+          Your maintenance dose is how much Predisolone, in mg, you should
+          be taking daily, regardless of whether you have relapsed.
+      </h3>
+      <h2 class='ion-header' style="padding-bottom: 8%">
+          Relapse Plan
+      </h2>
+      <h3>
+          The relapse plan will activate if you have 3 consecutive days of high
+          protein readings! You will be required to take extra medication until
+          your protein levels return to normal.
+          <p>Please enter amounts in mg and times in number of days</p>
+      </h3>
+  
+      <ion-grid>
+          <ion-row>
+          <ion-col>
+              <h4>Amount:</h4>
+              <h4>(mg)</h4>
+              <h5>
+                  <input formControlName="relapseAmount" type="number" class="rcorners1">
+              </h5>
+          </ion-col>
+          <ion-col>
+            <h4>Duration:</h4>
+            <h4>Until</h4>
+            <h4>Remission</h4>
+          </ion-col>
+          <ion-col>
+              <h4>Times:</h4>
+              <h4>(per int)</h4>
+              <h5>
+                  <input formControlName="relapseTimes" type="number" value="" class="rcorners1">
+              </h5>
+          </ion-col>
+          <ion-col>
+              <h4>Interval:</h4>
+              <h4>(days)</h4>
+              <h5>
+                  <input formControlName="relapseInterval" type="number" value="" class="rcorners1">
+              </h5>
+          </ion-col>
+          </ion-row>
+      </ion-grid>
+      <div class="error-messages">
+            <ng-container *ngFor="let error of error_messages.maintenanceDose">
+              <div class="error-messages" *ngIf="treatmentForm.get('relapseAmount').hasError(error.type) && (treatmentForm.get('relapseAmount').dirty || treatmentForm.get('relapseAmount').touched)">
+                {{ error.message }}
+              </div>
+            </ng-container>
+    </div>
+      <h2 class='ion-header' style="padding-bottom: 8%" style="padding-top: 10%">
+          Remission Plan
+      </h2>
+      <h3>
+          The remission plan will be activated when you are in a relapse and
+          have 3 consecutive days of low protein levels.
+      </h3>
+      <ion-grid>
+          <ion-row>
+          <ion-col>
+              <h4>Amount:</h4>
+              <h4>(mg)</h4>
+              <h5>
+                  <input formControlName="remissionAmount" type="number" class="rcorners1">
+  
+              </h5>
+          </ion-col>
+          <ion-col>
+              <h4>Duration:</h4>
+              <h4>(days)</h4>
+              <h5>
+                  <input formControlName="remissionDuration" type="number" value="" class="rcorners1">
+              </h5>
+          </ion-col>
+          <ion-col>
+              <h4>Times:</h4>
+              <h4>(per int)</h4>
+              <h5>
+                  <input formControlName="remissionTimes" type="number" value="" class="rcorners1">
+              </h5>
+          </ion-col>
+          <ion-col width="25%">
+              <h4>Interval:</h4>
+              <h4>(days)</h4>
+              <h5>
+                  <input formControlName="remissionInterval" type="number" value="" class="rcorners1">
+              </h5>
+          </ion-col>
+          </ion-row>
+      </ion-grid>
+      <div class="error-messages">
+            <ng-container *ngFor="let error of error_messages.maintenanceDose">
+              <div class="error-messages" *ngIf="treatmentForm.get('remissionAmount').hasError(error.type) && (treatmentForm.get('remissionAmount').dirty || treatmentForm.get('remissionAmount').touched)">
+                {{ error.message }}
+              </div>
+            </ng-container>
+    </div>
+      <ion-grid>
+          <ion-row>
+              <ion-col>
+                  <div formArrayName="moreRemissionAmount">
+                      <div *ngFor="let remissionControl of treatmentForm.get('moreRemissionAmount').controls; let i = index">
+                          <h5>
+                              <input [formControlName]="i"  type="number" value="" class="rcorners1">
+                          </h5>
+                      </div>
+                  </div>
+              </ion-col>
+              <ion-col>
+                  <div formArrayName="moreRemissionDuration">
+                      <div *ngFor="let remissionControl of treatmentForm.get('moreRemissionDuration').controls; let i = index">
+                          <h5>
+                              <input [formControlName]="i"  type="number" value="" class="rcorners1">
+                          </h5>
+                      </div>
+                  </div>
+              </ion-col>
+              <ion-col>
+                  <div formArrayName="moreRemissionTimes">
+                      <div *ngFor="let remissionControl of treatmentForm.get('moreRemissionTimes').controls; let i = index">
+                          <h5>
+                              <input [formControlName]="i"  type="number" value="" class="rcorners1">
+                          </h5>
+                      </div>
+                  </div>
+              </ion-col>
+              <ion-col>
+                  <div formArrayName="moreRemissionInterval">
+                      <div *ngFor="let remissionControl of treatmentForm.get('moreRemissionInterval').controls; let i = index">
+                          <h5>
+                              <input [formControlName]="i"  type="number" value="" class="rcorners1">
+                          </h5>
+                      </div>
+                  </div>
+              </ion-col>
+          </ion-row>
+      </ion-grid>
+  
+      <div class="box">
+      <h6>
+          <ion-button class="bottom-left" size="small" (click)="removeRemissionAmount(i); removeRemissionDuration(i); removeRemissionTimes(i); removeRemissionInterval(i)">-</ion-button>
+      </h6>
+      <h4>
+        <ion-button class="bottom-right" size="small" (click)="addRemissionAmount(i); addRemissionDuration(i); addRemissionTimes(i); addRemissionInterval(i)">+   Add another step</ion-button>
+      </h4>
+      </div>
+  
+      <div class="box" style="padding-top: 10%">
+      <ion-button [disabled]="!treatmentForm.valid"  class="bottom-right" size="small" shape="round" (click)="presentActionSheet()">
+          <ion-icon slot="end" name="arrow-round-forward"></ion-icon>
+          Next
+      </ion-button>
+      </div>
+  </form>
+  </ion-content>

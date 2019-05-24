@@ -1,0 +1,20 @@
+
+<svg width="140px" height="140px" viewBox="0 0 140 140" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-6" stroke="#70AF9A">
+            <rect id="Rectangle-Copy-4" stroke-width="6" fill="#FFFFFF" x="3" y="3" width="134" height="134" rx="13"></rect>
+            <g id="Group-Copy-7" transform="translate(16.000000, 17.000000)" stroke-width="10">
+                <path d="M19.8166667,0 L19.8166667,40" id="Path-2"></path>
+                <path d="M41,19.3333333 L0,19.3333333" id="Path-2-Copy"></path>
+            </g>
+            <g id="Group-Copy-8" transform="translate(51.000000, 52.000000)" stroke-width="10">
+                <path d="M19.8166667,0 L19.8166667,40" id="Path-2"></path>
+                <path d="M41,19.3333333 L0,19.3333333" id="Path-2-Copy"></path>
+            </g>
+            <g id="Group-Copy-9" transform="translate(83.000000, 83.000000)" stroke-width="10">
+                <path d="M19.8166667,0 L19.8166667,40" id="Path-2"></path>
+                <path d="M41,19.3333333 L0,19.3333333" id="Path-2-Copy"></path>
+            </g>
+        </g>
+    </g>
+</svg>

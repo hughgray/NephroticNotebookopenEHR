@@ -1,0 +1,11 @@
+
+<svg width="55px" height="55px" viewBox="0 0 55 55" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Tick-Copy-3">
+            <ellipse id="Oval" stroke="#979797" fill="#FFFFFF" cx="27.5" cy="28.5" rx="24.5" ry="23.5"></ellipse>
+            <g id="checked" fill="#6AC259" fill-rule="nonzero">
+                <path d="M27.5,0 C12.3128864,0 0,12.3123708 0,27.5 C0,42.6876292 12.3128864,55 27.5,55 C42.6887894,55 55,42.6876292 55,27.5 C55,12.3123708 42.6882737,0 27.5,0 Z M22.4553749,41.6262135 L10.3465474,29.5179016 L14.3824795,25.4819695 L22.4553749,33.5543493 L40.6175205,15.3916881 L44.6534526,19.4276202 L22.4553749,41.6262135 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>
