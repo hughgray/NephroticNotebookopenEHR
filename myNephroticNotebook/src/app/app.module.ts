@@ -21,6 +21,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { Platform } from '@ionic/angular';
+import { HttpClientModule } from '@angular/common/http'
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { Platform } from '@ionic/angular';
     HttpModule,
     PreReadingPageModule,
     IonicStorageModule.forRoot(),
+    HttpClientModule
   ],
   providers: [
     StatusBar,
@@ -49,7 +51,8 @@ import { Platform } from '@ionic/angular';
     Platform,
     File,
     SQLite,
-    DatabaseService
+    DatabaseService,
+    HttpClientModule
   ],
   bootstrap: [AppComponent]
 })

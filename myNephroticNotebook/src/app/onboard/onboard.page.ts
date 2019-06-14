@@ -3,6 +3,7 @@ import {FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angu
 import { DatabaseService } from '../services/database.service';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-onboard',
@@ -30,7 +31,7 @@ export class OnboardPage implements OnInit {
     ]
   }
 
-  constructor(private router: Router, public formBuilder: FormBuilder, private database:DatabaseService,public platform:Platform) { 
+  constructor(private http: HttpClient, private router: Router, public formBuilder: FormBuilder, private database:DatabaseService,public platform:Platform) { 
     
     this.profileForm = this.formBuilder.group({
       myName: new FormControl('',Validators.compose([
@@ -55,6 +56,25 @@ export class OnboardPage implements OnInit {
   }
 
   launchForm(){
+    console.log('here we go')
+    const headerDict = {
+      "Content-Type": "application/json",
+      "Ehr-Session-disabled": "1917e50d-65d3-4c2c-94e3-0b5d303e0b72",
+      "Authorization": "Basic YjI5ZWNhZGUtZWI2NS00NzQ4LThhNjEtMDE1NjQyMWMyNmFkOiQyYSQxMCQ2MTlraQ=="
+    }
+    
+    const requestOptions = {                                                                                                                                                                                 
+      headers: new HttpHeaders(headerDict), 
+    };
+    
+    this.http.get('https://cdr.code4health.org/rest/v1/template', requestOptions)
+    .subscribe(data => {
+      console.log(data);
+     }, error => {
+      console.log(error);
+    });
+  
+    console.log("Come on:", requestOptions)
   
   }
 
