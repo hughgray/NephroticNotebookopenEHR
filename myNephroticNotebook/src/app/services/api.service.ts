@@ -23,6 +23,7 @@ export class ApiService {
     headers: new HttpHeaders(this.headerDict), 
   }
   ehrID: any;
+  compUid: any;
   subjectNamespace = 'uk.nhs.nhs_number';
   newEHR = {
     "queryable": "true",
@@ -78,8 +79,16 @@ export class ApiService {
           
 
         },error => {
-          console.log("EHR session is:",error.status);
-          this.createEHRid(subjectId)
+          if (error.error instanceof ErrorEvent) {
+            // A client-side or network error occurred. Handle it accordingly.
+            console.error('An error occurred:', error.error.message);
+          } else {
+            // The backend returned an unsuccessful response code.
+            // The response body may contain clues as to what went wrong,
+            console.error(
+              `Backend returned code ${error.status}, ` +
+              `body was: ${error.error}`);
+          }
         });
     
       });
@@ -103,7 +112,16 @@ export class ApiService {
           this.addToDB()
 
         }, error => {
-          console.log("EHR create error:",error);
+          if (error.error instanceof ErrorEvent) {
+            // A client-side or network error occurred. Handle it accordingly.
+            console.error('An error occurred:', error.error.message);
+          } else {
+            // The backend returned an unsuccessful response code.
+            // The response body may contain clues as to what went wrong,
+            console.error(
+              `Backend returned code ${error.status}, ` +
+              `body was: ${error.error}`);
+          }
         });
 
       });
@@ -142,8 +160,16 @@ export class ApiService {
           }
 
         }, error => {
-          console.log("EHR session is:",error);
-          this.createEHRidUpdate(subjectId)
+          if (error.error instanceof ErrorEvent) {
+            // A client-side or network error occurred. Handle it accordingly.
+            console.error('An error occurred:', error.error.message);
+          } else {
+            // The backend returned an unsuccessful response code.
+            // The response body may contain clues as to what went wrong,
+            console.error(
+              `Backend returned code ${error.status}, ` +
+              `body was: ${error.error}`);
+          }
         });
 
       });
@@ -165,7 +191,16 @@ export class ApiService {
           this.addToDBupdate()
 
         }, error => {
-          console.log("EHR create error:",error);
+          if (error.error instanceof ErrorEvent) {
+            // A client-side or network error occurred. Handle it accordingly.
+            console.error('An error occurred:', error.error.message);
+          } else {
+            // The backend returned an unsuccessful response code.
+            // The response body may contain clues as to what went wrong,
+            console.error(
+              `Backend returned code ${error.status}, ` +
+              `body was: ${error.error}`);
+          }
         });
 
       });
@@ -187,23 +222,50 @@ export class ApiService {
         
         this.http.post(commitDailyComp, dailyReading, this.requestOptions)
         .subscribe(data => {
-          resolve(true);
+
+          if (data == null) {
+            console.log('commit to db')
+            this.storeReading(dailyReading)
+          }
+          else {
           console.log("Daily Reading Added:", JSON.stringify(data));
+
+          var json = JSON.stringify(data)
+          var info = JSON.parse(json)
+
+          this.compUid = info.compositionUid
+          console.log('CompUid:',this.compUid)
+
+          }
 
         }, error => {
           if (error.error instanceof ErrorEvent) {
             // A client-side or network error occurred. Handle it accordingly.
             console.error('An error occurred:', error.error.message);
+            this.storeReading(dailyReading)
           } else {
             // The backend returned an unsuccessful response code.
             // The response body may contain clues as to what went wrong,
             console.error(
               `Backend returned code ${error.status}, ` +
-              `body was: ${error.error}`);
+              `body was:`, JSON.stringify(error.error));
+              this.storeReading(dailyReading)
           }
         });
 
       });
+    }
+
+    storeReading(dailyReading){
+
+      var dailyReadingString = JSON.stringify(dailyReading)
+
+      var dayReading = {
+        "jsonReading": dailyReadingString,
+      }
+      this.database.insertData(dayReading, "jsonReadings"); 
+      console.log('Reading: ', dayReading);
+
     }
 
 

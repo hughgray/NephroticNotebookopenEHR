@@ -30,6 +30,7 @@ export class FetchReadingService implements OnInit{
   public active_state_id : Array<any>     = [];
   public data_log : Array<any>     = [];
   public export_data_log : Array<any>     = [];
+  public jsonDays : Array<any>     = [];
 
   
   constructor(private http:Http,private database:DatabaseService,public platform:Platform) { 
@@ -376,6 +377,41 @@ export class FetchReadingService implements OnInit{
       })               
     }
 
+    public getJsonReadings() : Promise<any>
+   {
+      return new Promise(resolve => 
+      {
+
+          this.database.db.executeSql(
+            `SELECT *
+              FROM jsonReadings`, 
+              [])
+                        
+            .then((data : any) => 
+            {			
+               this.jsonDays 	= [];
+               if(data.rows.length > 0) 
+               {
+                 var k;
+                  for(k = 0; k < data.rows.length; k++) 
+                  {	
+                     this.jsonDays.push({
+                       day: data.rows.item(k).jsonReading,
+                     });
+                  }
+               }
+               console.log("got from db", this.jsonDays);
+               resolve(this.jsonDays);
+
+            }) 
+            .catch((error) => 
+            {
+            console.log("Error: " + JSON.stringify(error.err));
+            });
+      })
+   }
+
+   
 }
 
 

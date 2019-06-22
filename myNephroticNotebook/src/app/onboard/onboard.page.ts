@@ -158,9 +158,15 @@ export class OnboardPage implements OnInit {
       "doctor_name": this.profileForm.value.myDoctor,
     }
     this.database.insertData(myDoc, "profileDoc");
-    this.api.getEHRstatus(this.profileForm.value.myNHSno)
 
-    this.router.navigateByUrl('/onboardtreatmentplan');
+    if (this.consent == true){
+      this.api.getEHRstatus(this.profileForm.value.myNHSno);
+      this.router.navigateByUrl('/onboardtreatmentplan');
+    }
+    else {
+      this.router.navigateByUrl('/onboardtreatmentplan');
+    }
+  
 
   } 
 }

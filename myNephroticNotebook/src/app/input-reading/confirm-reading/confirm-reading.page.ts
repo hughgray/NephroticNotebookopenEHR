@@ -243,9 +243,20 @@ export class ConfirmReadingPage implements OnInit {
         this.status_code = this.state_code[this.stateName]
         this.protein = this.protein_code[this.readingLevel]
         this.level = this.protein_level[this.readingLevel]	 
-        this.sendDailyReading(); 			  			
+        this.checkConsent(); 			  			
       });
     });
+
+  }
+
+  checkConsent(){
+
+    if (this.ehrId){
+      this.sendDailyReading()
+    }
+    else{
+      this.router.navigate(['tabs/tab2/post-reading']);
+    }
 
   }
 
@@ -261,7 +272,7 @@ export class ConfirmReadingPage implements OnInit {
     console.log('status code:', this.status_code)
     console.log('status value:', this.stateName)
     console.log('reason:', this.regime)
-    console.log('comment:', this.commentStr)
+    console.log('comment:', this.user_comment)
     console.log('dose mag:', this.reccDose)
     console.log('dose unit:', this.dosesPerInterval)
 
@@ -290,7 +301,7 @@ export class ConfirmReadingPage implements OnInit {
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/medication_item|code": "52388000",
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/medication_item|terminology": "SNOMED-CT",
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/reason": this.regime,
-    "nephrotic_syndrome_self_monitoring/daily_dose_administered/comment": this.commentStr,
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/comment": this.user_comment,
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|magnitude": this.reccDose,
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|unit": this.dosesPerInterval,
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|code": "mg",

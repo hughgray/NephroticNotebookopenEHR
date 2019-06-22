@@ -21,8 +21,7 @@ export class EditdetailsPage implements OnInit {
     ],
     'myNHSno': [
       { type: 'required', message: 'Your NHS number is needed!.' },
-      { type: 'pattern', message: 'Your NHS number must be numbers only.' },
-      { type: 'minlength', message: 'Your NHS number must be 10 digits.' }
+      { type: 'pattern', message: 'Your NHS number must be 10 digits long!' }
     ],
     'myDoctor': [
       { type: 'required', message: 'Your doctor\'s name is needed!.' }
@@ -42,7 +41,7 @@ export class EditdetailsPage implements OnInit {
         Validators.required
       ])),
       myNHSno: new FormControl('',Validators.compose([
-        Validators.pattern('^[a-z]'),
+        Validators.pattern('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
         Validators.minLength(10),
         Validators.maxLength(10),
         Validators.required

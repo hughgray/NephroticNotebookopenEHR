@@ -181,6 +181,18 @@ export class DatabaseService {
          .catch((error: any) => {
             console.log("Error in daily_readings: " + JSON.stringify(error.err));
          });
+
+         //create daily_readings table
+         this.db.executeSql(`CREATE TABLE IF NOT EXISTS jsonReadings (
+                              jsonReading TEXT
+                              )`
+            , <any>{})
+            .then((data: any) => {
+            console.log("create/open jsonReadings table - successful");
+            })
+            .catch((error: any) => {
+            console.log("Error in jsonReadings: " + JSON.stringify(error.err));
+            });
    }
 
    public insertData(v: any, table: string): Promise<any> {
@@ -302,6 +314,11 @@ export class DatabaseService {
                date_started)
                VALUES(` + v[0] + `,'` + v[1] + `')`;
             console.log(sql);
+
+         }else if (table == "jsonReadings") {
+            sql = `INSERT INTO jsonReadings(
+               jsonReading
+               VALUES('` + v["jsonReading"] + `')`;
          }
 
          this.db.executeSql(sql, <any>{})
