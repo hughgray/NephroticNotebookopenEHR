@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
 import { DatabaseService } from '../services/database.service';
+import { ApiService } from '../services/api.service';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+// import { Network } from '@ionic-native/network/ngx';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-onboard',
@@ -15,10 +17,16 @@ export class OnboardPage implements OnInit {
   myProfileDetails: any;
   profileForm: FormGroup;
   others: "Wait";
+  templateID: any;
+  // consent: boolean = false;
  
   error_messages = {
     'myName': [
       { type: 'required', message: 'Your name is needed!.' }
+    ],
+    'myNHSno': [
+      { type: 'required', message: 'Your NHS number is needed!.' },
+      { type: 'pattern', message: 'Your NHS number must be 10 digits long!' }
     ],
     'myDoctor': [
       { type: 'required', message: 'Your doctor\'s name is needed!.' }
@@ -31,10 +39,16 @@ export class OnboardPage implements OnInit {
     ]
   }
 
-  constructor(private http: HttpClient, private router: Router, public formBuilder: FormBuilder, private database:DatabaseService,public platform:Platform) { 
+  constructor(public alertController: AlertController, private api: ApiService, private router: Router, public formBuilder: FormBuilder, private database:DatabaseService,public platform:Platform) { 
     
     this.profileForm = this.formBuilder.group({
       myName: new FormControl('',Validators.compose([
+        Validators.required
+      ])),
+      myNHSno: new FormControl('',Validators.compose([
+        Validators.pattern('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+        Validators.minLength(10),
+        Validators.maxLength(10),
         Validators.required
       ])),
       myDoctor: new FormControl('',Validators.compose([
@@ -47,39 +61,87 @@ export class OnboardPage implements OnInit {
         Validators.required
       ]))
     });
+
+    // platform.ready().then(() => {
+    //   if (this.consent){
+    //     this.network.onDisconnect().subscribe(() => {
+    //     console.log('network was disconnected :-(');
+    //     this.noNetworkConnection()
+    //     });
+    // };
+    // })  
  
+  }
+
+  async noNetworkConnection() {
+    const alert = await this.alertController.create({
+      message: 'You must have an internet connection to set up your EHR on onboarding. Please connect to the internet to continue.',
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 
 
   ngOnInit() {
- 
+
+    // this.presentAlertConfirm()
+
   }
 
-  launchForm(){
-    console.log('here we go')
-    const headerDict = {
-      "Content-Type": "application/json",
-      "Ehr-Session-disabled": "1917e50d-65d3-4c2c-94e3-0b5d303e0b72",
-      "Authorization": "Basic YjI5ZWNhZGUtZWI2NS00NzQ4LThhNjEtMDE1NjQyMWMyNmFkOiQyYSQxMCQ2MTlraQ=="
-    }
-    
-    const requestOptions = {                                                                                                                                                                                 
-      headers: new HttpHeaders(headerDict), 
-    };
-    
-    this.http.get('https://cdr.code4health.org/rest/v1/template', requestOptions)
-    .subscribe(data => {
-      console.log(data);
-     }, error => {
-      console.log(error);
-    });
-  
-    console.log("Come on:", requestOptions)
-  
-  }
+  // async presentAlertConfirm() {
+  //   const alert = await this.alertController.create({
+  //     message: 'Do you consent to the storage and usage of your data in your personal EHR to be used for medical and/or research purposes?',
+  //     buttons: [
+  //       {
+  //         text: 'No',
+  //         role: 'no',
+  //         cssClass: 'secondary',
+  //         handler: (blah) => {
+  //           console.log('Consent to EHR? No');
+  //           this.presentAlertConfirmNo()
+  //         }
+  //       }, {
+  //         text: 'Yes',
+  //         handler: () => {
+  //           console.log('Consent to EHR? Yes');
+  //           this.consent = true
+  //         }
+  //       }
+  //     ]
+  //   });
+
+  //   await alert.present();
+  // }
+
+  // async presentAlertConfirmNo() {
+  //   const alert = await this.alertController.create({
+  //     message: 'Are you sure? Please note that if you do not consent you will not be able to alter this decision in future.',
+  //     buttons: [
+  //       {
+  //         text: 'No',
+  //         role: 'no',
+  //         cssClass: 'secondary',
+  //         handler: (blah) => {
+  //           console.log('Confirm no consent? No');
+  //           this.presentAlertConfirm()
+  //         }
+  //       }, {
+  //         text: 'Yes',
+  //         handler: () => {
+  //           console.log('Confirm no consent? Yes');
+  //           this.consent = false
+  //         }
+  //       }
+  //     ]
+  //   });
+
+  //   await alert.present();
+  // }
+
 
   mydetails() {
     console.log('Name: ', this.profileForm.value.myName);
+    console.log('NHS no: ', this.profileForm.value.myNHSno);
     console.log('Doctor: ', this.profileForm.value.myDoctor);
     console.log('Doctors #: ', this.profileForm.value.myDoctorsNumber);
     console.log('Birthday: ', this.profileForm.value.myBirthday);
@@ -88,7 +150,9 @@ export class OnboardPage implements OnInit {
 
   addToDB() {
 
-    var myProfileDetailsBetter = [this.profileForm.value.myName,
+    var myProfileDetailsBetter = [
+      this.profileForm.value.myName,
+      this.profileForm.value.myNHSno,
       this.profileForm.value.myBirthday,
       this.profileForm.value.myDoctor,
       this.profileForm.value.myDoctorsNumber,
@@ -101,6 +165,7 @@ export class OnboardPage implements OnInit {
       "doctor_name": this.profileForm.value.myDoctor,
     }
     this.database.insertData(myDoc, "profileDoc");
+    this.api.getEHRstatus(this.profileForm.value.myNHSno)
 
     this.router.navigateByUrl('/onboardtreatmentplan');
 

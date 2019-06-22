@@ -176,10 +176,12 @@ export class FetchReadingService implements OnInit{
                {	    
                   this.profile_details.push({
                     name: data.rows.item(k).patient_name,
+                    nhs: data.rows.item(k).nhs_number,
                     doc: data.rows.item(k).doctor_name,
                     num: data.rows.item(k).doctor_contact,
                     birthday: data.rows.item(k).birthday,
-                    othermeds: data.rows.item(k).other_meds
+                    othermeds: data.rows.item(k).other_meds,
+                    ehrid: data.rows.item(k).ehr_id
                   });
                }
             }

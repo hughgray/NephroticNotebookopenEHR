@@ -46,7 +46,7 @@ export class MydetailsPage implements OnInit {
       this.details.length = 0;
       for(k in data)
       {
-         this.details.push(data[k].name, data[k].doc, data[k].num, data[k].birthday, data[k].othermeds);	
+         this.details.push(data[k].name, data[k].nhs, data[k].doc, data[k].num, data[k].birthday, data[k].othermeds);	
       }
       console.log("plan from db", this.details)
       console.log("plan from db", this.details[0])

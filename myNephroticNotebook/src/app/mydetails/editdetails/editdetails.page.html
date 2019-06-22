@@ -14,6 +14,16 @@
       </ng-container>
     </div>
 
+    <h3><ion-label>Your NHS Number</ion-label></h3>
+    <h5><input formControlName="myNHSno" type="text" value=""class="rcorners" clearInput="true"></h5>
+    <div class="error-messages">
+      <ng-container *ngFor="let error of error_messages.myNHSno">
+        <div class="error-messages" *ngIf="profileForm.get('myNHSno').hasError(error.type) && (profileForm.get('myNHSno').dirty || profileForm.get('myNHSno').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+    </div>
+
     <h3><ion-label>Your Doctor</ion-label></h3>
     <h5><input formControlName="myDoctor" type="text" value=""class="rcorners" clearInput="true"></h5>
     <div class="error-messages">
@@ -21,7 +31,7 @@
         <div class="error-messages" *ngIf="profileForm.get('myDoctor').hasError(error.type) && (profileForm.get('myDoctor').dirty || profileForm.get('myDoctor').touched)">
           {{ error.message }}
         </div>
-      </ng-container>
+      </ng-container> 
     </div>
 
     <h3><ion-label>Your Doctor's Number</ion-label></h3>

@@ -22,6 +22,7 @@ import { EmailComposer } from '@ionic-native/email-composer/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { Platform } from '@ionic/angular';
 import { HttpClientModule } from '@angular/common/http'
+// import { Network } from '@ionic-native/network/ngx'
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { HttpClientModule } from '@angular/common/http'
     HttpModule,
     PreReadingPageModule,
     IonicStorageModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    //Network
   ],
   providers: [
     StatusBar,

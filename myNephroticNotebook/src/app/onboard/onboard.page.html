@@ -7,8 +7,6 @@
   <h3 style="padding-bottom: 10%">
       First, let's go about setting up your profile...
   </h3>
-
-  <ion-button (click)="launchForm()">Check</ion-button>
   
   <form [formGroup]="profileForm">
     <h3><ion-label>What's your name?</ion-label></h3>
@@ -20,6 +18,17 @@
         </div>
       </ng-container>
     </div>
+
+    <h3><ion-label>What's your NHS number?</ion-label></h3>
+    <h5><input formControlName="myNHSno" type="text" value=""class="rcorners" clearInput="true"></h5>
+    <div class="error-messages">
+      <ng-container *ngFor="let error of error_messages.myNHSno">
+        <div class="error-messages" *ngIf="profileForm.get('myNHSno').hasError(error.type) && (profileForm.get('myNHSno').dirty || profileForm.get('myNHSno').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+    </div>
+
     <h3><ion-label>Who's your doctor?</ion-label></h3>
     <h5><input formControlName="myDoctor" type="text" value=""class="rcorners" clearInput="true"></h5>
     <div class="error-messages">

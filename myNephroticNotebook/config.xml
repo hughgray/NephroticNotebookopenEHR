@@ -85,6 +85,10 @@
     <plugin name="cordova-plugin-email-composer" spec="0.9.2" />
     <plugin name="cordova-plugin-file" spec="6.0.1" />
     <plugin name="cordova-plugin-filepath" spec="1.5.1" />
+    <plugin name="cordova-plugin-advanced-http" spec="2.1.1">
+        <variable name="OKHTTP_VERSION" value="3.10.0" />
+    </plugin>
+    <plugin name="cordova-plugin-network-information" spec="2.0.1" />
     <engine name="ios" spec="5.0.0" />
     <engine name="android" spec="7.1.4" />
 </widget>

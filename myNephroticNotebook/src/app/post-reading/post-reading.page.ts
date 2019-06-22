@@ -33,6 +33,8 @@ export class PostReadingPage implements OnInit {
 
   orig_state: number;
   orig_start_date: string;
+  months = {0: "JAN",1:"FEB",2:"MAR",3:"APR",4:"MAY",5:"JUN",
+            6:"JUL",7:"AUG",8:"SEP",9:"OCT",10:"NOV",11:"DEC"};
 
   constructor(private database: DatabaseService, private router: Router, private storage: Storage) { }
 
@@ -50,48 +52,14 @@ export class PostReadingPage implements OnInit {
   getTodaysDateAsStr() {
     let today = new Date();
     let dd = today.getDate();
-    let mm = today.getMonth();
-    let mmstr;
+    let mm = moment().month()
+    let mmstr = this.months[mm]
 
-    switch (mm) {
-      case mm = 0:
-        mmstr = "Jan";
-        break;
-      case mm = 1:
-        mmstr = "Feb";
-        break;
-      case mm = 2:
-        mmstr = "Mar";
-        break;
-      case mm = 3:
-        mmstr = "Apr";
-        break;
-      case mm = 4:
-        mmstr = "May";
-        break;
-      case mm = 5:
-        mmstr = "Jun";
-        break;
-      case mm = 6:
-        mmstr = "Jul";
-        break;
-      case mm = 7:
-        mmstr = "Aug";
-        break;
-      case mm = 8:
-        mmstr = "Sep";
-        break;
-      case mm = 9:
-        mmstr = "Oct";
-        break;
-      case mm = 10:
-        mmstr = "Nov";
-        break;
-      case mm = 11:
-        mmstr = "Dec";
-    }
+    console.log('month first:', mm)
+    console.log('month1:', mmstr)
 
     let todaysDateAsStr = mmstr.toUpperCase() + ' ' + dd;
+    console.log('month3:', mmstr)
     return todaysDateAsStr;
   }
 

@@ -74,7 +74,7 @@ export class DatabaseService {
 
 
             })
-            .catch((err: any) => {
+            .catch((err: any) => { 
                console.error('Unable to open database: ', err);
             });
       });
@@ -106,10 +106,12 @@ export class DatabaseService {
       //create profile table
       this.db.executeSql(`CREATE TABLE IF NOT EXISTS profile (
                      patient_name TEXT PRIMARY KEY, 
+                     nhs_number TEXT,
                      birthday TEXT, 
                      doctor_name TEXT, 
                      doctor_contact TEXT,
-                     other_meds TEXT
+                     other_meds TEXT,
+                     ehr_id TEXT
                      )`,
          <any>{})
          .then((data: any) => {
@@ -190,21 +192,24 @@ export class DatabaseService {
          } else if (table == "profile") {
             sql = `INSERT INTO profile(
                patient_name,
+               nhs_number,
                birthday, 
                doctor_name, 
                doctor_contact)
                VALUES('`+ v[0] + `',
                       '`+ v[1] + `',
                       '`+ v[2] + `',
-                      '`+ v[3] + `')`;
+                      '`+ v[3] + `',
+                      '`+ v[4] + `')`;
 
          } else if (table == "profileUpdate") {
             sql = `UPDATE profile SET 
             patient_name = '`+ v[0] + `', 
-            birthday = '`+ v[1] + `',
-            doctor_name = '`+ v[2] + `', 
-            doctor_contact = '`+ v[3] + `', 
-            other_meds = '`+ v[4] + `'
+            nhs_number = '`+ v[1] + `', 
+            birthday = '`+ v[2] + `',
+            doctor_name = '`+ v[3] + `', 
+            doctor_contact = '`+ v[4] + `', 
+            other_meds = '`+ v[5] + `'
             WHERE patient_name IS NOT NULL`;
 
          } else if (table == "profileOtherMeds") {
@@ -212,6 +217,16 @@ export class DatabaseService {
                    SET other_meds = '`+ v["other_meds"] + `'
                    WHERE other_meds IS NULL`;
 
+         } else if (table == "profileEHRid") {
+            sql = `UPDATE profile
+                   SET ehr_id = '`+ v["ehr_id"] + `'
+                   WHERE ehr_id IS NULL`;
+
+         } else if (table == "profileEHRidUpdate") {
+            sql = `UPDATE profile
+                   SET ehr_id = '`+ v["ehr_id"] + `'
+                   WHERE ehr_id IS NOT NULL`;
+                   
          } else if (table == "profileDoc") {
             sql = `INSERT INTO treatment_plans(
                treatment_plan_id, 

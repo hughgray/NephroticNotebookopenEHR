@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatabaseService } from '../../services/database.service';
+import { ApiService } from '../../services/api.service';
 import { Storage } from '@ionic/storage';
-// import { FetchReadingService } from '../../services/fetch-reading.service';
+import * as moment from 'moment';
+import { FetchReadingService } from '../../services/fetch-reading.service';
 
 @Component({
   selector: 'app-confirm-reading',
@@ -32,6 +34,17 @@ export class ConfirmReadingPage implements OnInit {
   reccDose: number;
   stateName: string;
   intervalLen: number;
+  now: string;
+  protein: string;
+  level: string;
+  regime: string;
+  status_code: string;
+  myName: string;
+  ehrId: string;
+  state_code:object={'Maintenance':'at0002','Remission':"at0003",'Relapse':'at0004'};
+  protein_code:object={1:'at0096',2:"at0097",3:'at0098',4:'at0099',5:"at0100",6:'at0101'};
+  protein_level:object={1:'Negative',2:"Trace",3:'1+',4:'2+',5:"3+",6:'4+'};
+
 
 
   constructor(
@@ -39,7 +52,8 @@ export class ConfirmReadingPage implements OnInit {
     private database: DatabaseService,
     private router: Router,
     private storage: Storage,
-    // private fetch: FetchReadingService,
+    public fetchReading:FetchReadingService,
+    public api:ApiService
   ) { }
 
   ngOnInit() {
@@ -201,10 +215,100 @@ export class ConfirmReadingPage implements OnInit {
       .catch((error: any) => {
         console.log(error.stringify())
       })
+      this.dailyReadingPrep();
   }
 
   goBack() {
     this.router.navigateByUrl('tabs/tab2/input-reading');
   }
+
+  dailyReadingPrep(): Promise<any>{
+    return new Promise(resolve => {
+
+    this.now = moment().format('YYYY-MM-DDTHH:mm:ss')
+    this.fetchReading.myProfileDetails()
+    .then((data) => 
+      {
+         let existingData      = Object.keys(data).length;
+         if(existingData !== 0)
+         {
+            this.myName 	= String(data[0].name);
+            this.ehrId = String(data[0].ehrid);
+         }
+         
+        this.stateName = this.stateName.charAt(0).toUpperCase() + this.stateName.slice(1)
+        console.log("my details from db", this.myName)
+        console.log("my details from db2", this.ehrId)
+        this.regime = String(this.stateName) + ' regime'
+        this.status_code = this.state_code[this.stateName]
+        this.protein = this.protein_code[this.readingLevel]
+        this.level = this.protein_level[this.readingLevel]	 
+        this.sendDailyReading(); 			  			
+      });
+    });
+
+  }
+
+  sendDailyReading(): Promise<any>{
+    return new Promise(resolve => {
+
+    console.log('time:', this.now)
+    console.log('name:', this.myName)
+    console.log('ehrid:', this.ehrId)
+    console.log('protein code:', this.protein)
+    console.log('protein level:', this.level)
+    console.log('protein ordinal', this.readingLevel)
+    console.log('status code:', this.status_code)
+    console.log('status value:', this.stateName)
+    console.log('reason:', this.regime)
+    console.log('comment:', this.commentStr)
+    console.log('dose mag:', this.reccDose)
+    console.log('dose unit:', this.dosesPerInterval)
+
+
+    var dailyReading = {
+    "ctx/language": "en",
+    "ctx/territory": "GB",
+    "ctx/time": this.now,
+    "ctx/composer_name": this.myName,
+    "ctx/id_namespace": "NHS-APP",
+    "ctx/id_scheme": "NHS-APP",
+    "ctx/health_care_facility|name": "Home",
+    "nephrotic_syndrome_self_monitoring/urinalysis/protein|code": this.protein,
+    "nephrotic_syndrome_self_monitoring/urinalysis/protein|value": this.level,
+    "nephrotic_syndrome_self_monitoring/urinalysis/protein|ordinal": this.readingLevel,
+    "nephrotic_syndrome_self_monitoring/nephrotic_syndrome_status/problem_diagnosis_name|value": "Nephrotic syndrome",
+    "nephrotic_syndrome_self_monitoring/nephrotic_syndrome_status/problem_diagnosis_name|code": "52254009",
+    "nephrotic_syndrome_self_monitoring/nephrotic_syndrome_status/problem_diagnosis_name|terminology": "SNOMED-CT",
+    "nephrotic_syndrome_self_monitoring/nephrotic_syndrome_status/nephrotic_syndrome_status/status|code": this.status_code,
+    "nephrotic_syndrome_self_monitoring/nephrotic_syndrome_status/nephrotic_syndrome_status/status|value": this.stateName,
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/ism_transition/current_state|code": "245",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/ism_transition/current_state|value": "active",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/ism_transition/careflow_step|code": "at0006",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/ism_transition/careflow_step|value": "Dose administered",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/medication_item|value": "Prednisolone",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/medication_item|code": "52388000",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/medication_item|terminology": "SNOMED-CT",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/reason": this.regime,
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/comment": this.commentStr,
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|magnitude": this.reccDose,
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|unit": this.dosesPerInterval,
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|code": "mg",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|value": "mg",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|terminology": "UCUM",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/time": this.now 
+    }
+
+    console.log('body:', dailyReading)
+
+    this.api.commitComposition(this.ehrId, this.myName, dailyReading)
+
+    this.router.navigate(['tabs/tab2/post-reading']);
+  });
+
+  }
+
+
+
 
 }

@@ -31,7 +31,7 @@ export class OnboardothermedsPage implements OnInit {
     this.myOtherMedDetails = {
       "other_meds": this.myMeds,
     }
-    this.database.insertData(this.myOtherMedDetails, "profileOtherMeds");
+    this.database.insertData(this.myOtherMedDetails, "profileOtherMeds"); 
     console.log('Other Meds: ', this.myMeds);
     this.router.navigateByUrl('/tabs/tab2');
   }
