@@ -4,7 +4,6 @@ import { DatabaseService } from '../services/database.service';
 import { ApiService } from '../services/api.service';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
-// import { Network } from '@ionic-native/network/ngx';
 import { AlertController } from '@ionic/angular';
 
 @Component({
@@ -18,7 +17,7 @@ export class OnboardPage implements OnInit {
   profileForm: FormGroup;
   others: "Wait";
   templateID: any;
-  // consent: boolean = false;
+  consent: boolean = false;
  
   error_messages = {
     'myName': [
@@ -61,15 +60,6 @@ export class OnboardPage implements OnInit {
         Validators.required
       ]))
     });
-
-    // platform.ready().then(() => {
-    //   if (this.consent){
-    //     this.network.onDisconnect().subscribe(() => {
-    //     console.log('network was disconnected :-(');
-    //     this.noNetworkConnection()
-    //     });
-    // };
-    // })  
  
   }
 
@@ -84,59 +74,62 @@ export class OnboardPage implements OnInit {
 
   ngOnInit() {
 
-    // this.presentAlertConfirm()
+    console.log("consent flag",this.consent)
+    this.presentAlertConfirm()
 
   }
 
-  // async presentAlertConfirm() {
-  //   const alert = await this.alertController.create({
-  //     message: 'Do you consent to the storage and usage of your data in your personal EHR to be used for medical and/or research purposes?',
-  //     buttons: [
-  //       {
-  //         text: 'No',
-  //         role: 'no',
-  //         cssClass: 'secondary',
-  //         handler: (blah) => {
-  //           console.log('Consent to EHR? No');
-  //           this.presentAlertConfirmNo()
-  //         }
-  //       }, {
-  //         text: 'Yes',
-  //         handler: () => {
-  //           console.log('Consent to EHR? Yes');
-  //           this.consent = true
-  //         }
-  //       }
-  //     ]
-  //   });
+  async presentAlertConfirm() {
+    const alert = await this.alertController.create({
+      message: 'Do you consent to the storage and usage of your data in your personal EHR to be used for medical and/or research purposes?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'no',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Consent to EHR? No');
+            this.presentAlertConfirmNo()
+          }
+        }, {
+          text: 'Yes',
+          handler: () => {
+            console.log('Consent to EHR? Yes');
+            this.consent = true
+            console.log("consent flag",this.consent)
+          }
+        }
+      ]
+    });
 
-  //   await alert.present();
-  // }
+    await alert.present();
+  }
 
-  // async presentAlertConfirmNo() {
-  //   const alert = await this.alertController.create({
-  //     message: 'Are you sure? Please note that if you do not consent you will not be able to alter this decision in future.',
-  //     buttons: [
-  //       {
-  //         text: 'No',
-  //         role: 'no',
-  //         cssClass: 'secondary',
-  //         handler: (blah) => {
-  //           console.log('Confirm no consent? No');
-  //           this.presentAlertConfirm()
-  //         }
-  //       }, {
-  //         text: 'Yes',
-  //         handler: () => {
-  //           console.log('Confirm no consent? Yes');
-  //           this.consent = false
-  //         }
-  //       }
-  //     ]
-  //   });
+  async presentAlertConfirmNo() {
+    const alert = await this.alertController.create({
+      message: 'Are you sure? Please note that if you do not consent you will not be able to alter this decision in future.',
+      buttons: [
+        {
+          text: 'No',
+          role: 'no',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm no consent? No');
+            this.presentAlertConfirm()
+          }
+        }, {
+          text: 'Yes',
+          handler: () => {
+            console.log('Confirm no consent? Yes');
+            this.consent = false
+            console.log("consent flag",this.consent)
+          }
+        }
+      ]
+    });
 
-  //   await alert.present();
-  // }
+    await alert.present();
+  }
 
 
   mydetails() {

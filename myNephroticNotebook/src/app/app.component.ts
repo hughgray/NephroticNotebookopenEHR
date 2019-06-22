@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+// import { Network } from '@ionic-native/network/ngx';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ export class AppComponent {
     private statusBar: StatusBar
   ) {
     this.initializeApp();
+    
   }
 
   initializeApp() {
@@ -24,3 +26,11 @@ export class AppComponent {
     });
   }
 }
+    // platform.ready().then(() => {
+    //   if (this.consent){
+    //     this.network.onDisconnect().subscribe(() => {
+    //     console.log('network was disconnected :-(');
+    //     this.noNetworkConnection()
+    //     });
+    // };
+    // })  
