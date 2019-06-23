@@ -396,7 +396,8 @@ export class FetchReadingService implements OnInit{
                   for(k = 0; k < data.rows.length; k++) 
                   {	
                      this.jsonDays.push({
-                       day: data.rows.item(k).jsonReading,
+                        Number: data.rows.item(k).jsonNo,
+                        Body: data.rows.item(k).jsonReading,
                      });
                   }
                }

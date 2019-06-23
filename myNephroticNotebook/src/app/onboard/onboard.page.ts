@@ -5,6 +5,8 @@ import { ApiService } from '../services/api.service';
 import { Router } from '@angular/router';
 import { Platform } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import { Network } from '@ionic-native/network/ngx'
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-onboard',
@@ -38,7 +40,7 @@ export class OnboardPage implements OnInit {
     ]
   }
 
-  constructor(public alertController: AlertController, private api: ApiService, private router: Router, public formBuilder: FormBuilder, private database:DatabaseService,public platform:Platform) { 
+  constructor(private storage: Storage, public network: Network, public alertController: AlertController, private api: ApiService, private router: Router, public formBuilder: FormBuilder, private database:DatabaseService,public platform:Platform) { 
     
     this.profileForm = this.formBuilder.group({
       myName: new FormControl('',Validators.compose([
@@ -60,13 +62,14 @@ export class OnboardPage implements OnInit {
         Validators.required
       ]))
     });
+
  
   }
 
   async noNetworkConnection() {
     const alert = await this.alertController.create({
-      message: 'You must have an internet connection to set up your EHR on onboarding. Please connect to the internet to continue.',
-      buttons: ['OK']
+      header: 'CONNECTION ERROR',
+      message: 'You must be able to connect to the CDR in order to continue with onboarding. Please check your internet connection and restart the app.',
     });
     await alert.present();
   }
@@ -74,7 +77,10 @@ export class OnboardPage implements OnInit {
 
   ngOnInit() {
 
-    console.log("consent flag",this.consent)
+    this.storage.set("Connection", 1);
+    console.log("consent flag",this.consent);
+    this.storage.set("EHR", 0);
+    console.log("EHR flag: 0");
     this.presentAlertConfirm()
 
   }
@@ -96,7 +102,10 @@ export class OnboardPage implements OnInit {
           handler: () => {
             console.log('Consent to EHR? Yes');
             this.consent = true
-            console.log("consent flag",this.consent)
+            console.log("consent flag",this.consent);
+            this.storage.set("EHR", 1);
+            console.log("EHR flag set to 1");
+            this.api.getTemplates()
           }
         }
       ]
@@ -129,6 +138,27 @@ export class OnboardPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  checkConnection(){
+
+    console.log("Checking Connection flag....");
+    if (this.consent == true){
+        this.api.getTemplates()
+    }
+
+    this.storage.get("Connection")
+      .then((val) => {
+        console.log("val pulled from storage: ",val);
+        if (val == 0){
+          this.noNetworkConnection()
+        }
+        else{
+          console.log("did that work?");
+          this.addToDB()
+        }
+    });
+  
   }
 
 

@@ -57,6 +57,9 @@ export class ConfirmReadingPage implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.storage.set("Connection", 0);
+
     this.sub = this.route.params.subscribe(params => {
       this.reading = params['reading'];
     });
@@ -108,7 +111,9 @@ export class ConfirmReadingPage implements OnInit {
         this.readingLevel = 6;
         break;
       }
+      
     }
+
   }
 
   ionViewWillEnter() {
@@ -313,13 +318,28 @@ export class ConfirmReadingPage implements OnInit {
     console.log('body:', dailyReading)
 
     this.api.commitComposition(this.ehrId, this.myName, dailyReading)
-
-    this.router.navigate(['tabs/tab2/post-reading']);
+    .then(() => {
+      return this.routeComp(dailyReading)
+    })
   });
 
+}
+
+  async routeComp(dailyReading){
+
+    await this.storage.get("Connection")
+      .then((val) => {
+        console.log("val pulled from storage 2: ",val);
+        if (val == 0){
+          this.api.storeReading(dailyReading)
+          this.router.navigate(['tabs/tab2/post-reading']);
+        }
+        else{
+          console.log("did that work?? Connection is good");
+          this.router.navigate(['tabs/tab2/post-reading']);
+        }
+    });
+
   }
-
-
-
 
 }

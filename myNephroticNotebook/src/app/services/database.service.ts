@@ -184,7 +184,9 @@ export class DatabaseService {
 
          //create daily_readings table
          this.db.executeSql(`CREATE TABLE IF NOT EXISTS jsonReadings (
-                              jsonReading TEXT
+                              jsonNo INTEGER PRIMARY KEY AUTOINCREMENT,
+                              jsonReading TEXT,
+                              compUid TEXT
                               )`
             , <any>{})
             .then((data: any) => {
@@ -314,11 +316,19 @@ export class DatabaseService {
                date_started)
                VALUES(` + v[0] + `,'` + v[1] + `')`;
             console.log(sql);
-
-         }else if (table == "jsonReadings") {
+         }
+         else if (table == "jsonReadings") {
             sql = `INSERT INTO jsonReadings(
-               jsonReading
-               VALUES('` + v["jsonReading"] + `')`;
+               jsonNo,
+               jsonReading)
+               VALUES(NULL,
+                     '` + v["jsonReading"] + `')`;
+         }
+         else if (table == "jsonReadingsUid") {
+            sql = `INSERT INTO jsonReadings(
+               compUid)
+               VALUES('` + v["compUid"] + `')
+               WHERE jsonNo= '` + v["jsonNo"] + `'`;
          }
 
          this.db.executeSql(sql, <any>{})
@@ -328,6 +338,20 @@ export class DatabaseService {
             })
             .catch((error: any) => {
                console.log("Error in ", table, + JSON.stringify(error.err));
+            });
+      });
+   }
+
+   public dropJsonData(): Promise<any> {
+      return new Promise(resolve => {
+         let sql = `DELETE FROM jsonReadings WHERE compUid IS NOT NULL`;
+         this.db.executeSql(sql, <any>{})
+            .then((data: any) => {
+               resolve(true);
+               console.log("row(s) deleted from json table");
+            })
+            .catch((error: any) => {
+               console.log("Error in jsonReadings" + JSON.stringify(error.err));
             });
       });
    }

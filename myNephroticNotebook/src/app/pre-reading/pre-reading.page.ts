@@ -52,6 +52,9 @@ export class PreReadingPage implements OnInit {
   }
 
   ngOnInit() {
+    this.storage.set("Connection", 0);
+    console.log('set connection to 0')
+
     this.saveDaysStartingState();
     this.today = new Date();
     this.dd = this.today.getDate();
