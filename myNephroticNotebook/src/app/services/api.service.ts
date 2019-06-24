@@ -4,6 +4,7 @@ import { Platform } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
 import { FetchReadingService } from '../services/fetch-reading.service';
 import { Storage } from '@ionic/storage';
+import { lookup } from 'dns';
 
 @Injectable({
   providedIn: 'root'
@@ -45,11 +46,13 @@ export class ApiService {
         if (data == null) {
           console.log('Connection to CDR Bad 1!')
           this.storage.set("Connection", 0);
+          resolve()
         }
         else {
           console.log("templateId in",JSON.stringify(data));
           this.storage.set("Connection", 1);
           console.log("Connection flag",1);
+          resolve()
         }
       }, error => {
         if (error.error instanceof ErrorEvent) {
@@ -57,6 +60,7 @@ export class ApiService {
           console.log('Connection to CDR Bad 2!')
           console.error('An error occurred:', error.error.message);
           this.storage.set("Connection", 0);
+          resolve()
         } else {
           // The backend returned an unsuccessful response code.
           // The response body may contain clues as to what went wrong,
@@ -65,9 +69,10 @@ export class ApiService {
             `Backend returned code ${error.status}, ` +
             `body was: ${error.error}`);
             this.storage.set("Connection", 0);
+            resolve()
         }
       });
-      resolve()
+    
     });
   }
 
@@ -316,9 +321,8 @@ export class ApiService {
               console.log('dataStoredJSON', this.jsonReading)
               this.getStoredDetails()
            }
-    	  			
+           resolve()
         });
-        resolve()
       })
     }
 
@@ -330,7 +334,7 @@ export class ApiService {
         {
           this.sendStoredReadings()
         });
-        console.log('sendingStored')
+        console.log('just dropped, now sending stored readings...')
         resolve()
       });
     }
@@ -347,17 +351,26 @@ export class ApiService {
               this.myName 	= String(data[0].name);
               this.ehrId = String(data[0].ehrid);
           }
+          console.log('sending stored readings...')
+          this.loop()
+          resolve() 
 
-          for (var i = 0; i < this.jsonReading.Body.length; i++) { 
+          })  			
+        });
+      }
+    
+    async loop() {
+      for (var i = 0; i < this.jsonReading.Body.length; i++) {
+          await new Promise(resolve => {
+
             var readingDay = String(this.jsonReading[i].Body)
             console.log('readingDay', readingDay)
             console.log('number', this.jsonReading[i].Number)
             this.commitStoredComposition(this.ehrId, this.myName, readingDay, this.jsonReading[i].Number)
-          }
-          	  			
-        });
-        resolve()
-      })
+            resolve()
+
+          })
+        }
     }
 
     public commitStoredComposition(ehrId, committerName, dailyReading, number): Promise<any> {
@@ -381,7 +394,9 @@ export class ApiService {
           var compUid = info.compositionUid
           console.log('CompUid:', compUid)
           this.storeReadingUid(compUid, number)
-          resolve()
+          .then(()=>{
+            resolve()
+          })
 
           }
 
@@ -404,6 +419,7 @@ export class ApiService {
     }
 
     public storeReadingUid(compUid, number){
+      return new Promise(resolve => {
 
       console.log('CompUid: ', compUid);
       console.log('Number: ', number);
@@ -415,8 +431,11 @@ export class ApiService {
 
       this.database.insertData(dayReadingFill, "jsonReadingsUid"); 
       console.log('Reading: ', dayReadingFill);
+      resolve()
+    })
 
     }
+
 
 
 }

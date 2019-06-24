@@ -105,7 +105,6 @@ export class OnboardPage implements OnInit {
             console.log("consent flag",this.consent);
             this.storage.set("EHR", 1);
             console.log("EHR flag set to 1");
-            this.api.getTemplates()
           }
         }
       ]
@@ -145,7 +144,15 @@ export class OnboardPage implements OnInit {
     console.log("Checking Connection flag....");
     if (this.consent == true){
         this.api.getTemplates()
+        .then( () => {
+          return this.continueCheck()
+    })
+    } else{
+        this.continueCheck()
     }
+  }
+
+  continueCheck(){
 
     this.storage.get("Connection")
       .then((val) => {
