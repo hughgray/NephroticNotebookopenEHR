@@ -4,7 +4,6 @@ import { Platform } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
 import { FetchReadingService } from '../services/fetch-reading.service';
 import { Storage } from '@ionic/storage';
-import { lookup } from 'dns';
 
 @Injectable({
   providedIn: 'root'
