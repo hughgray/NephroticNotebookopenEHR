@@ -203,7 +203,7 @@ export class FetchReadingService implements OnInit{
    {
       return new Promise(resolve => 
       {
-         this.database.db.executeSql('SELECT MAX(treatment_plan_id) as planId, plan_uid FROM treatment_plans', [])
+         this.database.db.executeSql('SELECT MAX(treatment_plan_id) as planId, plan_uid FROM treatment_plans WHERE plan_uid IS NOT NULL', [])
          .then((data : any) => 
          {			
             this.treatmentUid 	= [];
