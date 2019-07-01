@@ -51,6 +51,20 @@
               </div>
             </ng-container>
     </div>
+    <div class="error-messages">
+        <ng-container *ngFor="let error of error_messages.maintenanceDose">
+          <div class="error-messages" *ngIf="treatmentForm.get('maintenanceTimes').hasError(error.type) && (treatmentForm.get('maintenanceTimes').dirty || treatmentForm.get('maintenanceTimes').touched)">
+            {{ error.message }}
+          </div>
+        </ng-container>
+    </div>
+    <div class="error-messages">
+        <ng-container *ngFor="let error of error_messages.maintenanceDose">
+          <div class="error-messages" *ngIf="treatmentForm.get('maintenanceInterval').hasError(error.type) && (treatmentForm.get('maintenanceInterval').dirty || treatmentForm.get('maintenanceInterval').touched)">
+            {{ error.message }}
+          </div>
+        </ng-container>
+    </div>
       <h3 style="padding-bottom: 10%">
           Your maintenance dose is how much Predisolone, in mg, you should
           be taking daily, regardless of whether you have relapsed.
@@ -102,6 +116,20 @@
               </div>
             </ng-container>
     </div>
+    <div class="error-messages">
+        <ng-container *ngFor="let error of error_messages.maintenanceDose">
+          <div class="error-messages" *ngIf="treatmentForm.get('relapseTimes').hasError(error.type) && (treatmentForm.get('relapseTimes').dirty || treatmentForm.get('relapseTimes').touched)">
+            {{ error.message }}
+          </div>
+        </ng-container>
+    </div>
+    <div class="error-messages">
+        <ng-container *ngFor="let error of error_messages.maintenanceDose">
+        <div class="error-messages" *ngIf="treatmentForm.get('relapseInterval').hasError(error.type) && (treatmentForm.get('relapseInterval').dirty || treatmentForm.get('relapseInterval').touched)">
+            {{ error.message }}
+        </div>
+        </ng-container>
+    </div>
       <h2 class='ion-header' style="padding-bottom: 8%" style="padding-top: 10%">
           Remission Plan
       </h2>
@@ -145,6 +173,27 @@
       <div class="error-messages">
             <ng-container *ngFor="let error of error_messages.maintenanceDose">
               <div class="error-messages" *ngIf="treatmentForm.get('remissionAmount').hasError(error.type) && (treatmentForm.get('remissionAmount').dirty || treatmentForm.get('remissionAmount').touched)">
+                {{ error.message }}
+              </div>
+            </ng-container>
+    </div>
+    <div class="error-messages">
+            <ng-container *ngFor="let error of error_messages.maintenanceDose">
+              <div class="error-messages" *ngIf="treatmentForm.get('remissionDuration').hasError(error.type) && (treatmentForm.get('remissionDuration').dirty || treatmentForm.get('remissionDuration').touched)">
+                {{ error.message }}
+              </div>
+            </ng-container>
+    </div>
+    <div class="error-messages">
+            <ng-container *ngFor="let error of error_messages.maintenanceDose">
+              <div class="error-messages" *ngIf="treatmentForm.get('remissionTimes').hasError(error.type) && (treatmentForm.get('remissionTimes').dirty || treatmentForm.get('remissionTimes').touched)">
+                {{ error.message }}
+              </div>
+            </ng-container>
+    </div>
+    <div class="error-messages">
+            <ng-container *ngFor="let error of error_messages.maintenanceDose">
+              <div class="error-messages" *ngIf="treatmentForm.get('remissionInterval').hasError(error.type) && (treatmentForm.get('remissionInterval').dirty || treatmentForm.get('remissionInterval').touched)">
                 {{ error.message }}
               </div>
             </ng-container>

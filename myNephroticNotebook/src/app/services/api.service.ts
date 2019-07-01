@@ -75,6 +75,47 @@ export class ApiService {
     });
   }
 
+  public getTemplateAct(): Promise<any> {
+    return new Promise(resolve => {
+
+      let templateUrl = `${this.cdrRestBaseUrl}/template/${this.templateIdReading}`
+      
+      this.http.get(templateUrl, this.requestOptions)
+      .subscribe(data => {
+
+        if (data == null) {
+          console.log('Connection to CDR Bad 1!')
+          this.storage.set("Connection", 0);
+          resolve()
+        }
+        else {
+          console.log("templateId in",JSON.stringify(data));
+          this.storage.set("Connection", 1);
+          console.log("Connection flag",1);
+          resolve()
+        }
+      }, error => {
+        if (error.error instanceof ErrorEvent) {
+          // A client-side or network error occurred. Handle it accordingly.
+          console.log('Connection to CDR Bad 2!')
+          console.error('An error occurred:', error.error.message);
+          this.storage.set("Connection", 0);
+          resolve()
+        } else {
+          // The backend returned an unsuccessful response code.
+          // The response body may contain clues as to what went wrong,
+          console.log('Connection to CDR Bad 3!')
+          console.error(
+            `Backend returned code ${error.status}, ` +
+            `body was: ${error.error}`);
+            this.storage.set("Connection", 0);
+            resolve()
+        }
+      });
+    
+    });
+  }
+
     public getEHRstatus(subjectId): Promise<any> {
       return new Promise(resolve => {
   
@@ -252,23 +293,28 @@ export class ApiService {
 
           if (data == null) {
             console.log('commit to db')
-            this.storage.set("Connection", 0);
+            this.storage.set("Connection", 0)
+            .then(()=>{
+              this.storeReading(dailyReading)
+              resolve()
+            })  
+
             console.log("Connection flag set to 0");
-            resolve()
           }
           else {
-          console.log("Daily Reading Added:", JSON.stringify(data));
+            console.log("Daily Reading Added:", JSON.stringify(data));
 
-          var json = JSON.stringify(data)
-          var info = JSON.parse(json)
+            var json = JSON.stringify(data)
+            var info = JSON.parse(json)
 
-          this.compUid = info.compositionUid
-          console.log('CompUid:',this.compUid)
-          this.storage.set("Connection", 1);
-          console.log("Connection flagset to 1 by commit comp");
-          this.dropJSON()
-          resolve()
-
+            this.compUid = info.compositionUid
+            console.log('CompUid:',this.compUid)
+            console.log("Connection flagset to 1 by commit comp");
+            this.storage.set("Connection", 1)
+            .then(() => {
+              this.dropJSON()
+              resolve()
+            })
           }
 
         }, error => {
@@ -277,7 +323,12 @@ export class ApiService {
             console.error('An error occurred:', error.error.message);
             this.storage.set("Connection", 0);
             console.log("Connection flag set to 0");
-            resolve()
+            this.storage.set("Connection", 0)
+            .then(()=>{
+              this.storeReading(dailyReading)
+              resolve()
+            })  
+            console.log("Connection flag set to 0");
 
           } else {
             // The backend returned an unsuccessful response code.
@@ -285,9 +336,12 @@ export class ApiService {
             console.error(
               `Backend returned code ${error.status}, ` +
               `body was:`, JSON.stringify(error.error));
-              this.storage.set("Connection", 0);
+              this.storage.set("Connection", 0)
+              .then(()=>{
+                this.storeReading(dailyReading)
+                resolve()
+              })  
               console.log("Connection flag set to 0");
-              resolve()
           }
         });
 
@@ -295,18 +349,35 @@ export class ApiService {
     }
 
     public storeReading(dailyReading){
+      return new Promise(resolve => {
 
-      var dailyReadingJString = JSON.stringify(dailyReading)
-      console.log('Reading: ', dailyReadingJString);
 
-      var dayReading = {
-        "jsonReading": dailyReadingJString
-      }
-      this.database.insertData(dayReading, "jsonReadings"); 
-      console.log('Reading: ', dayReading);
-
+        var dailyReadingJString = JSON.stringify(dailyReading)
+        console.log('stored json:', dailyReadingJString)
+        console.log('Reading: ', dailyReadingJString);
+        var dayReading = {
+          "jsonReading": dailyReadingJString
+        }
+        console.log('Reading 2: ', dayReading);
+        this.database.insertData(dayReading, "jsonReadings")
+        .then(()=>{
+          return resolve()
+        })  
+      })
     }
 
+    public dropJSON():Promise<any>{
+          return new Promise(resolve => {
+
+          this.database.dropJsonData()
+          .then(() => 
+            {
+              this.sendStoredReadings()
+              return resolve()
+            });
+            console.log('just dropped, now sending stored readings...')
+          });
+        }
 
     public sendStoredReadings():Promise<any>{
       return new Promise(resolve => {
@@ -318,58 +389,53 @@ export class ApiService {
            if(existingData !== 0) {
               this.jsonReading = data;
               console.log('dataStoredJSON', this.jsonReading)
+              console.log('dataStoredJSON', this.jsonReading[0].Body)
               this.getStoredDetails()
+              return resolve()
+           }else{
+            return resolve()
            }
-           resolve()
         });
       })
-    }
-
-    public dropJSON():Promise<any>{
-      return new Promise(resolve => {
-
-      this.database.dropJsonData()
-      .then((data) => 
-        {
-          this.sendStoredReadings()
-        });
-        console.log('just dropped, now sending stored readings...')
-        resolve()
-      });
     }
 
     public getStoredDetails():Promise<any>{
       return new Promise(resolve => {
 
       this.fetchReading.myProfileDetails()
-      .then((data) => 
-        {
-          let existingData      = Object.keys(data).length;
-          if(existingData !== 0)
-          {
-              this.myName 	= String(data[0].name);
-              this.ehrId = String(data[0].ehrid);
-          }
+      .then((data) => {
+          this.myName 	= data[0].name;
+          this.ehrId = data[0].ehrid;
+          console.log('sending stored readings top...')
           console.log('sending stored readings...')
-          this.loop()
-          resolve() 
-
-          })  			
+          this.loopReadings()
+          .then(()=>{
+            return resolve()
+          })  
+          })	
         });
       }
     
-    async loop() {
-      for (var i = 0; i < this.jsonReading.Body.length; i++) {
-          await new Promise(resolve => {
+    loopReadings() {
+      return new Promise(resolve => {
+      console.log('length of thingy:',this.jsonReading.length);
+      for (var i = 0; i < this.jsonReading.length; i++) {
+            new Promise(resolve => {
 
-            var readingDay = String(this.jsonReading[i].Body)
-            console.log('readingDay', readingDay)
-            console.log('number', this.jsonReading[i].Number)
-            this.commitStoredComposition(this.ehrId, this.myName, readingDay, this.jsonReading[i].Number)
-            resolve()
+              console.log('ehrID:', this.ehrId)
+              console.log('name:', this.myName)
+              var readingDayS = String(this.jsonReading[i].Body)
+              var readingDay = JSON.parse(readingDayS)
+              console.log('readingDay', readingDay)
+              console.log('number', this.jsonReading[i].Number)
+              return this.commitStoredComposition(this.ehrId, this.myName, readingDay, this.jsonReading[i].Number)
+              .then(()=>{
+                return resolve()
+            })
 
           })
         }
+      })
     }
 
     public commitStoredComposition(ehrId, committerName, dailyReading, number): Promise<any> {
@@ -394,9 +460,8 @@ export class ApiService {
           console.log('CompUid:', compUid)
           this.storeReadingUid(compUid, number)
           .then(()=>{
-            resolve()
+            return resolve()
           })
-
           }
 
         }, error => {
@@ -424,15 +489,127 @@ export class ApiService {
       console.log('Number: ', number);
 
       var dayReadingFill = {
+        "jsonNo": number,
         "compUid": compUid,
-        "jsonNo": number
       }
 
-      this.database.insertData(dayReadingFill, "jsonReadingsUid"); 
+      this.database.insertData(dayReadingFill, "jsonReadingsUid")
+      .then(()=>{
+        return resolve()
+      }); 
       console.log('Reading: ', dayReadingFill);
-      resolve()
     })
 
+    }
+
+
+    public commitTreatmentPlan(ehrId, committerName, treatmentPlan): Promise<any> {
+      return new Promise(resolve => {
+  
+        let commitDailyComp = `${this.cdrRestBaseUrl}/composition?ehrId=${ehrId}&templateId=${this.templateIdTreatment}&committerName=${committerName}&format=FLAT`
+        
+        this.http.post(commitDailyComp, treatmentPlan, this.requestOptions)
+        .subscribe(data => {
+
+          if (data == null) {
+            console.log("Data null- bad news");
+            resolve()
+          }
+          else {
+            console.log("Treatment Plan Added:", JSON.stringify(data));
+
+            var json = JSON.stringify(data)
+            var info = JSON.parse(json)
+
+            var planUid = info.compositionUid
+            console.log('PlanUid:',this.compUid)
+            console.log("Storing Plan Uid");
+            this.storePlanUid(planUid)
+            .then(() => {
+              resolve()
+            })
+          }
+
+        }, error => {
+          if (error.error instanceof ErrorEvent) {
+            // A client-side or network error occurred. Handle it accordingly.
+            console.error('An error occurred:', error.error.message);
+            resolve()
+
+          } else {
+            // The backend returned an unsuccessful response code.
+            // The response body may contain clues as to what went wrong,
+            console.error(
+              `Backend returned code ${error.status}, ` +
+              `body was:`, JSON.stringify(error.error));
+              resolve()
+          }
+        });
+
+      });
+    }
+
+    public storePlanUid(planUid){
+      return new Promise(resolve => {
+
+      console.log('PlanUid: ', planUid);
+
+      var Uid = {
+        "planUid": planUid,
+      }
+
+      this.database.insertData(Uid, "treatmentUid")
+      .then(()=>{
+        return resolve()
+      }); 
+    })
+
+    }
+
+    public commitNewTreatmentPlan(compositionId, treatmentPlan): Promise<any> {
+      return new Promise(resolve => {
+  
+        let commitDailyComp = `${this.cdrRestBaseUrl}/composition/${compositionId}?format=FLAT&templateId=${this.templateIdTreatment}`
+        
+        this.http.put(commitDailyComp, treatmentPlan, this.requestOptions)
+        .subscribe(data => {
+
+          if (data == null) {
+            console.log("Data null- bad news");
+            resolve()
+          }
+          else {
+            console.log("New Treatment Plan Added:", JSON.stringify(data));
+
+            var json = JSON.stringify(data)
+            var info = JSON.parse(json)
+
+            var planUid = info.compositionUid
+            console.log('PlanUid:',this.compUid)
+            console.log("Storing Plan Uid");
+            this.storePlanUid(planUid)
+            .then(() => {
+              resolve()
+            })
+          }
+
+        }, error => {
+          if (error.error instanceof ErrorEvent) {
+            // A client-side or network error occurred. Handle it accordingly.
+            console.error('An error occurred:', error.error.message);
+            resolve()
+
+          } else {
+            // The backend returned an unsuccessful response code.
+            // The response body may contain clues as to what went wrong,
+            console.error(
+              `Backend returned code ${error.status}, ` +
+              `body was:`, JSON.stringify(error.error));
+              resolve()
+          }
+        });
+
+      });
     }
 
 

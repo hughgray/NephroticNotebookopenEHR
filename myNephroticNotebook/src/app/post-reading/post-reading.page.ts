@@ -3,6 +3,7 @@ import { DatabaseService } from '../services/database.service';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-post-reading',
@@ -36,18 +37,32 @@ export class PostReadingPage implements OnInit {
   months = {0: "JAN",1:"FEB",2:"MAR",3:"APR",4:"MAY",5:"JUN",
             6:"JUL",7:"AUG",8:"SEP",9:"OCT",10:"NOV",11:"DEC"};
 
-  constructor(private database: DatabaseService, private router: Router, private storage: Storage) { }
+  constructor(public api:ApiService, private database: DatabaseService, private router: Router, private storage: Storage) { }
 
   ngOnInit() {
-    this.now = moment().format('YYYY-MM-DD')+' 00:00:00';
-    this.todayStr = this.getTodaysDateAsStr();
-    this.getReadingInfo();
-    this.getTreatmentDetails();
+      this.now = moment().format('YYYY-MM-DD')+' 00:00:00';
+      this.todayStr = this.getTodaysDateAsStr();
+      this.getReadingInfo();
+      this.getTreatmentDetails();
+  }
+
+  syncEHR(){
+    this.storage.get("Connection")
+      .then((val) => {
+        console.log("val pulled from storage 3 on post page: Connection= ",val);
+        if (val == 1){
+          this.api.dropJSON()
+        }
+        else{
+          console.log("No connection, don't try");
+        }
+    });
   }
 
   ionViewWillEnter() {
-    this.ngOnInit();
+    this.ngOnInit()
   }
+  
 
   getTodaysDateAsStr() {
     let today = new Date();

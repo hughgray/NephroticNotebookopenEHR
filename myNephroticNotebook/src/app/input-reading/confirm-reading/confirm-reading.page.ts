@@ -41,6 +41,8 @@ export class ConfirmReadingPage implements OnInit {
   status_code: string;
   myName: string;
   ehrId: string;
+  dailyReading: any;
+  dailyDose: number;
   state_code:object={'Maintenance':'at0002','Remission':"at0003",'Relapse':'at0004'};
   protein_code:object={1:'at0096',2:"at0097",3:'at0098',4:'at0099',5:"at0100",6:'at0101'};
   protein_level:object={1:'Negative',2:"Trace",3:'1+',4:'2+',5:"3+",6:'4+'};
@@ -57,8 +59,6 @@ export class ConfirmReadingPage implements OnInit {
   ) { }
 
   ngOnInit() {
-
-    this.storage.set("Connection", 0);
 
     this.sub = this.route.params.subscribe(params => {
       this.reading = params['reading'];
@@ -153,7 +153,6 @@ export class ConfirmReadingPage implements OnInit {
     this.database.insertData(this.todaysReadingObj, "daily_readingsReal")
       .then((data: any) => {
         this.updateNewState();
-        this.router.navigate(['tabs/tab2/post-reading']);
       })
       .catch((error: any) => {
         console.log(error);
@@ -247,7 +246,16 @@ export class ConfirmReadingPage implements OnInit {
         this.regime = String(this.stateName) + ' regime'
         this.status_code = this.state_code[this.stateName]
         this.protein = this.protein_code[this.readingLevel]
-        this.level = this.protein_level[this.readingLevel]	 
+        this.level = this.protein_level[this.readingLevel]
+        if(this.dosesPerInterval > 1){
+          this.dailyDose = this.reccDose*this.dosesPerInterval
+        }
+        else {
+          this.dailyDose = this.reccDose
+        }
+        if (this.intervalLen > 1){
+          this.dailyDose = this.dailyDose/this.intervalLen
+        }
         this.checkConsent(); 			  			
       });
     });
@@ -256,12 +264,18 @@ export class ConfirmReadingPage implements OnInit {
 
   checkConsent(){
 
-    if (this.ehrId){
-      this.sendDailyReading()
-    }
-    else{
-      this.router.navigate(['tabs/tab2/post-reading']);
-    }
+    this.storage.get("EHR")
+      .then((val) => {
+        console.log("val pulled from storage: ",val);
+        if (val == 0){
+          console.log('No consent- just local storage')
+          this.router.navigate(['tabs/tab2/post-reading']);
+        }
+        else{
+          console.log('ehrID exists so they consent')
+          this.sendDailyReading()
+        }
+    });
 
   }
 
@@ -282,11 +296,11 @@ export class ConfirmReadingPage implements OnInit {
     console.log('dose unit:', this.dosesPerInterval)
 
 
-    var dailyReading = {
+    this.dailyReading = {
     "ctx/language": "en",
     "ctx/territory": "GB",
     "ctx/time": this.now,
-    "ctx/composer_name": this.myName,
+    "ctx/composer_name": this.myName, 
     "ctx/id_namespace": "NHS-APP",
     "ctx/id_scheme": "NHS-APP",
     "ctx/health_care_facility|name": "Home",
@@ -307,39 +321,73 @@ export class ConfirmReadingPage implements OnInit {
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/medication_item|terminology": "SNOMED-CT",
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/reason": this.regime,
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/comment": this.user_comment,
-    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|magnitude": this.reccDose,
-    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|unit": this.dosesPerInterval,
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|magnitude": this.dailyDose,
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|unit": "mg",
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|code": "mg",
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|value": "mg",
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|terminology": "UCUM",
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/time": this.now 
     }
 
-    console.log('body:', dailyReading)
+    console.log('body:', this.dailyReading)
+    this.checkConnection()
 
-    this.api.commitComposition(this.ehrId, this.myName, dailyReading)
-    .then(() => {
-      return this.routeComp(dailyReading)
+  //   this.api.commitComposition(this.ehrId, this.myName, this.dailyReading)
+  //   .then(() => {
+  //     console.log('Get connection...');
+  //     return this.routeComp(dailyReading)
+  //   })
+  //   resolve()
+  // });
+  })
+  }
+  checkConnection(){
+
+    console.log("Checking Connection flag....");
+      this.api.getTemplates()
+        .then( () => {
+          return this.continueCheck()
     })
-  });
+  }
 
-}
+    // async routeComp(dailyReading){
 
-  async routeComp(dailyReading){
+    //   await this.storage.get("Connection")
+    //     .then((val) => {
+    //       console.log("value pulled from storage 2: ",val);
+    //       if (val == 0){
+    //         this.api.storeReading(dailyReading)
+    //         this.router.navigate(['tabs/tab2/post-reading']);
+    //       }
+    //       else{
+    //         console.log("did that work?? Connection is good");
+    //         this.router.navigate(['tabs/tab2/post-reading']);
+    //       }
+    //   });
 
-    await this.storage.get("Connection")
+    // }
+
+  continueCheck(){
+
+    this.storage.get("Connection")
       .then((val) => {
-        console.log("val pulled from storage 2: ",val);
-        if (val == 0){
-          this.api.storeReading(dailyReading)
-          this.router.navigate(['tabs/tab2/post-reading']);
+        console.log("val pulled from storage: ",val);
+        if (val == 1){
+          this.api.commitComposition(this.ehrId, this.myName, this.dailyReading)
+          .then(()=>{
+            this.router.navigate(['tabs/tab2/post-reading'])
+          })
         }
         else{
-          console.log("did that work?? Connection is good");
-          this.router.navigate(['tabs/tab2/post-reading']);
+          console.log("did that work?");
+          this.api.storeReading(this.dailyReading)
+          .then(()=>{
+            this.router.navigate(['tabs/tab2/post-reading'])
+          })
+        
         }
     });
-
+  
   }
 
 }

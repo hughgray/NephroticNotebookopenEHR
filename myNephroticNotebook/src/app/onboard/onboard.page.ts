@@ -206,4 +206,45 @@ export class OnboardPage implements OnInit {
   
 
   } 
+
+  dummyData(){
+
+    var dailyReading = {
+    "ctx/language": "en",
+    "ctx/territory": "GB",
+    "ctx/time": "2019-06-02T16:17:17.122Z",
+    "ctx/composer_name": "Silvia Blake",
+    "ctx/id_namespace": "NHS-APP",
+    "ctx/id_scheme": "NHS-APP",
+    "ctx/health_care_facility|name": "Home",
+    "nephrotic_syndrome_self_monitoring/urinalysis/protein|code": "at0098",
+    "nephrotic_syndrome_self_monitoring/urinalysis/protein|value": "1+",
+    "nephrotic_syndrome_self_monitoring/urinalysis/protein|ordinal": 3,
+    "nephrotic_syndrome_self_monitoring/nephrotic_syndrome_status/problem_diagnosis_name|value": "Nephrotic syndrome",
+    "nephrotic_syndrome_self_monitoring/nephrotic_syndrome_status/problem_diagnosis_name|code": "52254009",
+    "nephrotic_syndrome_self_monitoring/nephrotic_syndrome_status/problem_diagnosis_name|terminology": "SNOMED-CT",
+    "nephrotic_syndrome_self_monitoring/nephrotic_syndrome_status/nephrotic_syndrome_status/status|code": "at0004",
+    "nephrotic_syndrome_self_monitoring/nephrotic_syndrome_status/nephrotic_syndrome_status/status|value": "Relapse",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/ism_transition/current_state|code": "245",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/ism_transition/current_state|value": "active",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/ism_transition/careflow_step|code": "at0006",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/ism_transition/careflow_step|value": "Dose administered",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/medication_item|value": "Prednisolone",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/medication_item|code": "52388000",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/medication_item|terminology": "SNOMED-CT",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/reason": "Relapse regime",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/comment": "Much the same",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|magnitude": 20,
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|unit": "1",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|code": "mg",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|value": "mg",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|terminology": "UCUM",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/time": "2019-06-02T16:17:17.122Z"
+  }
+
+  this.api.storeReading(dailyReading);
+
+  }
+
+  
 }

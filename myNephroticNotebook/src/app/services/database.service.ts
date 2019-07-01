@@ -38,12 +38,14 @@ export class DatabaseService {
    active_treatment_plan: object = {};
    active_state: object = {};
    now: string;   
+   nowT: string;
 
    constructor(
       public sql: SQLite,
       public platform: Platform,
       private http: Http) {
       this.now = moment().format('YYYY-MM-DD') + ' 00:00:00';
+      this.nowT = moment().format('YYYY-MM-DD hh:mm')
       this.platform.ready().then(() => {
          this.callDatabase().then((data: any) => {
             this.insertDummyData().then(() => {
@@ -125,7 +127,8 @@ export class DatabaseService {
       this.db.executeSql(`CREATE TABLE IF NOT EXISTS treatment_plans(
                      treatment_plan_id INTEGER PRIMARY KEY AUTOINCREMENT, 
                      date_created TEXT, 
-                     doctor_name TEXT
+                     doctor_name TEXT,
+                     plan_uid TEXT
                      )`,
          <any>{})
          .then((data: any) => {
@@ -247,10 +250,15 @@ export class DatabaseService {
                date_created, 
                doctor_name)
                VALUES(NULL,
-                  '`+ this.now + `',
+                  '`+ this.nowT + `',
                   '`+ v["doctor_name"] + `')`;
 
-         } else if (table == "daily_readings") {
+         } else if (table == "treatmentUid") {
+            sql = `UPDATE treatment_plans
+               SET plan_uid = '`+ v["planUid"] + `'
+               WHERE date_created =  '`+ this.nowT + `'`;
+
+         }else if (table == "daily_readings") {
             sql = `INSERT INTO daily_readings(
                date_of_reading, 
                reading_level_id, 
@@ -325,10 +333,9 @@ export class DatabaseService {
                      '` + v["jsonReading"] + `')`;
          }
          else if (table == "jsonReadingsUid") {
-            sql = `INSERT INTO jsonReadings(
-               compUid)
-               VALUES('` + v["compUid"] + `')
-               WHERE jsonNo= '` + v["jsonNo"] + `'`;
+            sql = `UPDATE jsonReadings
+                   SET compUid = '`+ v["compUid"] + `'
+                   WHERE jsonNo=  `+ v["jsonNo"] +``;
          }
 
          this.db.executeSql(sql, <any>{})
@@ -337,7 +344,7 @@ export class DatabaseService {
                console.log("row inserted in", table);
             })
             .catch((error: any) => {
-               console.log("Error in ", table, + JSON.stringify(error.err));
+               console.log("Error in ", table, + JSON.stringify(error));
             });
       });
    }

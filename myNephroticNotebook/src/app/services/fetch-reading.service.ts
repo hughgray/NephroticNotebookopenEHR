@@ -31,6 +31,7 @@ export class FetchReadingService implements OnInit{
   public data_log : Array<any>     = [];
   public export_data_log : Array<any>     = [];
   public jsonDays : Array<any>     = [];
+  public treatmentUid : Array<any>     = [];
 
   
   constructor(private http:Http,private database:DatabaseService,public platform:Platform) { 
@@ -189,6 +190,37 @@ export class FetchReadingService implements OnInit{
 
             resolve(this.profile_details);
             console.log("Profile read: ",this.profile_details);
+
+         }) 
+         .catch((error) => 
+         {
+            console.log("Error: " + JSON.stringify(error.err));
+         });
+      });
+   }
+
+   public treatmentDetails() : Promise<any>
+   {
+      return new Promise(resolve => 
+      {
+         this.database.db.executeSql('SELECT MAX(treatment_plan_id) as planId, plan_uid FROM treatment_plans', [])
+         .then((data : any) => 
+         {			
+            this.treatmentUid 	= [];
+            if(data.rows.length > 0) 
+            {
+              var k;
+               for(k = 0; k < data.rows.length; k++) 
+               {	    
+                  this.treatmentUid.push({
+                    planUid: data.rows.item(k).plan_uid,
+                    planNo: data.rows.item(k).planId,
+                  });
+               }
+            }
+
+            resolve(this.treatmentUid);
+            console.log("Plan Uid read: ",this.treatmentUid);
 
          }) 
          .catch((error) => 
