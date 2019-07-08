@@ -5,7 +5,7 @@
       Welcome to your Nephrotic Notebook!
   </h2>
   <h3 style="padding-bottom: 10%">
-      First, let's go about setting up your profile...
+      First, let's go about setting up your profile with the help of your clinician...
   </h3>
 
   <ion-button (click)='dummyData()'>Dummy</ion-button>
@@ -31,8 +31,35 @@
       </ng-container>
     </div>
 
+    <h3><ion-label>When is your birthday?</ion-label></h3>
+    <h5><ion-datetime formControlName="myBirthday" display-format="DD MM YYYY" picker-format="DD MM YYYY" value="" class="rcorners"></ion-datetime></h5>
+    <div class="error-messages">
+      <ng-container *ngFor="let error of error_messages.myBirthday">
+        <div class="error-messages" *ngIf="profileForm.get('myBirthday').hasError(error.type) && (profileForm.get('myBirthday').dirty || profileForm.get('myBirthday').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+    </div>
+    
+    <h3><ion-label>Who is your CDR provider?</ion-label></h3>
+    <h5>
+      <ion-select formControlName="cdrProvider" interface="popover" placeholder="CDR" class="rcorners">
+        <ion-select-option value="Gosh">GOSH</ion-select-option>
+        <ion-select-option value="Leeds">Leeds Helm PHR</ion-select-option>
+        <ion-select-option value="Nhs">NHS Scotland NDP</ion-select-option>
+        <ion-select-option value="None">None</ion-select-option>
+      </ion-select>
+    </h5>
+    <div class="error-messages">
+      <ng-container *ngFor="let error of error_messages.cdrProvider">
+        <div class="error-messages" *ngIf="profileForm.get('cdrProvider').hasError(error.type) && (profileForm.get('cdrProvider').dirty || profileForm.get('cdrProvider').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+    </div>
+
     <h3><ion-label>Who's your doctor?</ion-label></h3>
-    <h5><input formControlName="myDoctor" type="text" value=""class="rcorners" clearInput="true"></h5>
+    <h5><input formControlName="myDoctor" type="text" value="" class="rcorners" clearInput="true"></h5>
     <div class="error-messages">
       <ng-container *ngFor="let error of error_messages.myDoctor">
         <div class="error-messages" *ngIf="profileForm.get('myDoctor').hasError(error.type) && (profileForm.get('myDoctor').dirty || profileForm.get('myDoctor').touched)">
@@ -51,15 +78,37 @@
       </ng-container>
     </div>
 
-    <h3><ion-label>When is your birthday?</ion-label></h3>
-    <h5><ion-datetime formControlName="myBirthday" display-format="DD MM YYYY" picker-format="DD MM YYYY" value="" class="rcorners"></ion-datetime></h5>
+    <h3><ion-label>What's their medical ID and its type?</ion-label></h3>
+    <ion-grid>
+        <ion-row>
+        <ion-col>
+            <h5>
+                <input formControlName="docID" type="text" class="rcorners">
+            </h5>
+        </ion-col>
+        <ion-col>
+            <ion-select formControlName="docType" interface="popover" placeholder="Type" class="rcorners2">
+              <ion-select-option value="GMC">GMC</ion-select-option>
+              <ion-select-option value="NMC">NMC</ion-select-option>
+            </ion-select>
+        </ion-col>
+        </ion-row>
+    </ion-grid>
     <div class="error-messages">
-      <ng-container *ngFor="let error of error_messages.myBirthday">
-        <div class="error-messages" *ngIf="profileForm.get('myBirthday').hasError(error.type) && (profileForm.get('myBirthday').dirty || profileForm.get('myBirthday').touched)">
+      <ng-container *ngFor="let error of error_messages.docID">
+        <div class="error-messages" *ngIf="profileForm.get('docID').hasError(error.type) && (profileForm.get('docID').dirty || profileForm.get('docID').touched)">
           {{ error.message }}
         </div>
       </ng-container>
     </div>
+    <div class="error-messages">
+        <ng-container *ngFor="let error of error_messages.docType">
+          <div class="error-messages" *ngIf="profileForm.get('docType').hasError(error.type) && (profileForm.get('docType').dirty || profileForm.get('docType').touched)">
+            {{ error.message }}
+          </div>
+        </ng-container>
+    </div>
+
   </form>
     <h6>
     <ion-button [disabled]="!profileForm.valid" class="bottom-right" size="small" shape="round" (click)="checkConnection()">

@@ -247,15 +247,7 @@ export class ConfirmReadingPage implements OnInit {
         this.status_code = this.state_code[this.stateName]
         this.protein = this.protein_code[this.readingLevel]
         this.level = this.protein_level[this.readingLevel]
-        if(this.dosesPerInterval > 1){
-          this.dailyDose = this.reccDose*this.dosesPerInterval
-        }
-        else {
-          this.dailyDose = this.reccDose
-        }
-        if (this.intervalLen > 1){
-          this.dailyDose = this.dailyDose/this.intervalLen
-        }
+        this.dailyDose = (this.reccDose*this.dosesPerInterval)/this.intervalLen
         this.checkConsent(); 			  			
       });
     });
@@ -322,7 +314,7 @@ export class ConfirmReadingPage implements OnInit {
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/reason": this.regime,
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/comment": this.user_comment,
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|magnitude": this.dailyDose,
-    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|unit": "mg",
+    "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_amount|unit": 1,
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|code": "mg",
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|value": "mg",
     "nephrotic_syndrome_self_monitoring/daily_dose_administered/dosage/dose_unit|terminology": "UCUM",

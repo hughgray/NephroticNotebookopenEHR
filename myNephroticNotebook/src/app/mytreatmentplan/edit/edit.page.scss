@@ -36,11 +36,13 @@ h6 {
 .rcorners {
     align-content: center;
     border-radius: 15px;
+    border: 0px;
     background-color: white; 
     width: 100%;
     height: 100%; 
     text-align: center;
-    border: 0px;
+    margin-bottom: 10px;
+    padding: 5px;
 }
 
 .rcorners1 {
@@ -71,5 +73,19 @@ h6 {
     position: absolute;
     bottom: 0;
     left: 0;
+}
+
+
+.rcorners2 {
+    align-content: center;
+    border-radius: 15px;
+    border: 0px;
+    background-color: white; 
+    width: 100%;
+    height: 50%; 
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    padding: 5px;
 }
 

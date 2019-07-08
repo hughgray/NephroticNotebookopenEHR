@@ -183,7 +183,10 @@ export class FetchReadingService implements OnInit{
                     num: data.rows.item(k).doctor_contact,
                     birthday: data.rows.item(k).birthday,
                     othermeds: data.rows.item(k).other_meds,
-                    ehrid: data.rows.item(k).ehr_id
+                    ehrid: data.rows.item(k).ehr_id,
+                    docId: data.rows.item(k).doctor_id,
+                    idType: data.rows.item(k).id_type,
+                    cdrProv: data.rows.item(k).cdr_provider
                   });
                }
             }

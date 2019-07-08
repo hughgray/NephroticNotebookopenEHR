@@ -112,6 +112,9 @@ export class DatabaseService {
                      birthday TEXT, 
                      doctor_name TEXT, 
                      doctor_contact TEXT,
+                     doctor_id TEXT,
+                     id_type TEXT,
+                     cdr_provider TEXT,
                      other_meds TEXT,
                      ehr_id TEXT
                      )`,
@@ -212,12 +215,18 @@ export class DatabaseService {
                nhs_number,
                birthday, 
                doctor_name, 
-               doctor_contact)
+               doctor_contact,
+               doctor_id,
+               id_type,
+               cdr_provider)
                VALUES('`+ v[0] + `',
                       '`+ v[1] + `',
                       '`+ v[2] + `',
                       '`+ v[3] + `',
-                      '`+ v[4] + `')`;
+                      '`+ v[4] + `',
+                      '`+ v[5] + `',
+                      '`+ v[6] + `',
+                      '`+ v[7] + `')`;
 
          } else if (table == "profileUpdate") {
             sql = `UPDATE profile SET 
@@ -226,7 +235,10 @@ export class DatabaseService {
             birthday = '`+ v[2] + `',
             doctor_name = '`+ v[3] + `', 
             doctor_contact = '`+ v[4] + `', 
-            other_meds = '`+ v[5] + `'
+            other_meds = '`+ v[5] + `',
+            doctor_id = '`+ v[6] + `',
+            id_type = '`+ v[7] + `',
+            cdr_provider = '`+ v[8] + `'
             WHERE patient_name IS NOT NULL`;
 
          } else if (table == "profileOtherMeds") {

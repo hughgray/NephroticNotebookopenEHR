@@ -140,22 +140,27 @@ export class ApiService {
           this.ehrID = info.ehrId
           console.log('ehrID:',this.ehrID)
           this.addToDB()
+          resolve()
           }
           
 
         },error => {
           if (error.error instanceof ErrorEvent) {
             // A client-side or network error occurred. Handle it accordingly.
+            console.error('Error checking for EHR')
             console.error('An error occurred:', error.error.message);
+            resolve()
           } else {
             // The backend returned an unsuccessful response code.
             // The response body may contain clues as to what went wrong,
+            console.error('Error checking for EHR')
             console.error(
               `Backend returned code ${error.status}, ` +
               `body was: ${error.error}`);
+              resolve()
           }
         });
-        resolve()
+       
     
       });
     } 
@@ -176,17 +181,22 @@ export class ApiService {
           this.ehrID = info.ehrId
           console.log('ehrID:',this.ehrID)
           this.addToDB()
+          resolve()
 
         }, error => {
           if (error.error instanceof ErrorEvent) {
             // A client-side or network error occurred. Handle it accordingly.
+            console.error('Error creating new EHR')
             console.error('An error occurred:', error.error.message);
+            resolve()
           } else {
             // The backend returned an unsuccessful response code.
             // The response body may contain clues as to what went wrong,
+            console.error('Error creating new EHR')
             console.error(
               `Backend returned code ${error.status}, ` +
               `body was: ${error.error}`);
+              resolve()
           }
         });
 

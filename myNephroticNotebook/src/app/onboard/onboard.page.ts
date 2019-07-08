@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
+import { Component, OnInit, ErrorHandler } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
 import { DatabaseService } from '../services/database.service';
 import { ApiService } from '../services/api.service';
 import { Router } from '@angular/router';
@@ -20,6 +20,7 @@ export class OnboardPage implements OnInit {
   others: "Wait";
   templateID: any;
   consent: boolean = false;
+  type: string;
  
   error_messages = {
     'myName': [
@@ -35,8 +36,18 @@ export class OnboardPage implements OnInit {
     'myDoctorsNumber': [
       { type: 'required', message: 'A number is needed!.' }
     ],
+    'myDocID': [
+      { type: 'required', message: 'Your clinician\'s ID is needed!' }
+    ],
     'myBirthday': [
       { type: 'required', message: 'Please tell us your birthday :).' }
+    ],
+    'cdrProvider': [
+      { type: 'required', message: 'Please choose a CDR provider or select None.' }
+    ],
+    'docID': [
+      { type: 'required', message: 'This ID must be 7 digits long!' },
+      { type: 'pattern', message: 'This ID must be 7 digits long!' }
     ]
   }
 
@@ -60,20 +71,39 @@ export class OnboardPage implements OnInit {
       ])),
       myBirthday: new FormControl('',Validators.compose([
         Validators.required
+      ])),
+      docID: new FormControl('',Validators.compose([
+        Validators.pattern('[0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+        Validators.minLength(7),
+        Validators.maxLength(7),
+        Validators.required
+      ])),
+      docType: new FormControl('',Validators.compose([
+        Validators.required
+      ])),
+      cdrProvider: new FormControl('',Validators.compose([
+        Validators.required
       ]))
     });
-
  
   }
+  
 
   async noNetworkConnection() {
     const alert = await this.alertController.create({
       header: 'CONNECTION ERROR',
-      message: 'You must be able to connect to the CDR in order to continue with onboarding. Please check your internet connection and restart the app.',
+      message: 'You must be able to connect to the CDR in order to continue with onboarding. Please check your internet connection and CDR provider.',
     });
     await alert.present();
   }
 
+  async noCdrChosen() {
+    const alert = await this.alertController.create({
+      header: 'Must choose a CDR',
+      message: 'In order to store your data in your EHR you must select your CDR provider.',
+    });
+    await alert.present();
+  }
 
   ngOnInit() {
 
@@ -107,7 +137,8 @@ export class OnboardPage implements OnInit {
             console.log("EHR flag set to 1");
           }
         }
-      ]
+      ],
+      backdropDismiss: false
     });
 
     await alert.present();
@@ -133,7 +164,8 @@ export class OnboardPage implements OnInit {
             console.log("consent flag",this.consent)
           }
         }
-      ]
+      ],
+      backdropDismiss: false
     });
 
     await alert.present();
@@ -142,12 +174,16 @@ export class OnboardPage implements OnInit {
   checkConnection(){
 
     console.log("Checking Connection flag....");
-    if (this.consent == true){
+    if (this.consent == true && this.profileForm.value.cdrProvider == 'None'){
+        this.noCdrChosen()
+    }
+    else if (this.consent == true){
         this.api.getTemplates()
         .then( () => {
-          return this.continueCheck()
+          return this.continueCheck();
     })
-    } else{
+    }
+    else{
         this.continueCheck()
     }
   }
@@ -174,6 +210,9 @@ export class OnboardPage implements OnInit {
     console.log('NHS no: ', this.profileForm.value.myNHSno);
     console.log('Doctor: ', this.profileForm.value.myDoctor);
     console.log('Doctors #: ', this.profileForm.value.myDoctorsNumber);
+    console.log('ID: ', this.profileForm.value.docID);
+    console.log('Type: ', this.profileForm.value.docType);
+    console.log('CDR: ', this.profileForm.value.cdrProvider);
     console.log('Birthday: ', this.profileForm.value.myBirthday);
     console.log('Other_meds: ', this.others)
   }
@@ -186,6 +225,9 @@ export class OnboardPage implements OnInit {
       this.profileForm.value.myBirthday,
       this.profileForm.value.myDoctor,
       this.profileForm.value.myDoctorsNumber,
+      this.profileForm.value.docID,
+      this.profileForm.value.docType,
+      this.profileForm.value.cdrProvider
     ]
 
     this.database.insertData(myProfileDetailsBetter, "profile");
@@ -197,13 +239,14 @@ export class OnboardPage implements OnInit {
     this.database.insertData(myDoc, "profileDoc");
 
     if (this.consent == true){
-      this.api.getEHRstatus(this.profileForm.value.myNHSno);
-      this.router.navigateByUrl('/onboardtreatmentplan');
+      this.api.getEHRstatus(this.profileForm.value.myNHSno)
+      .then(()=>{ 
+        this.router.navigateByUrl('/onboardtreatmentplan');
+      })
     }
     else {
       this.router.navigateByUrl('/onboardtreatmentplan');
     }
-  
 
   } 
 
