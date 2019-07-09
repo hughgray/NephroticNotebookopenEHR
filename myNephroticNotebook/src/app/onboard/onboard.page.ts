@@ -184,7 +184,7 @@ export class OnboardPage implements OnInit {
     })
     }
     else{
-        this.continueCheck()
+        this.addToDB()
     }
   }
 
@@ -198,7 +198,7 @@ export class OnboardPage implements OnInit {
         }
         else{
           console.log("did that work?");
-          this.addToDB()
+          this.ehrPlay()
         }
     });
   
@@ -236,18 +236,30 @@ export class OnboardPage implements OnInit {
     var myDoc = {
       "doctor_name": this.profileForm.value.myDoctor,
     }
-    this.database.insertData(myDoc, "profileDoc");
-
-    if (this.consent == true){
-      this.api.getEHRstatus(this.profileForm.value.myNHSno)
-      .then(()=>{ 
+    this.database.insertData(myDoc, "profileDoc")
+    .then(()=>{
+      if (this.consent == true){
+        this.api.addToDB()
         this.router.navigateByUrl('/onboardtreatmentplan');
-      })
-    }
-    else {
-      this.router.navigateByUrl('/onboardtreatmentplan');
-    }
+      }
+      else{
+        this.router.navigateByUrl('/onboardtreatmentplan');
+      }
+    })
 
+  }
+
+  ehrPlay(){
+
+    this.api.getEHRstatus(this.profileForm.value.myNHSno)
+    .then((data)=>{ 
+      if (data == 'error'){
+        this.noNetworkConnection
+      }
+      else {
+        this.addToDB()
+      }
+    })
   } 
 
   dummyData(){
@@ -288,6 +300,5 @@ export class OnboardPage implements OnInit {
   this.api.storeReading(dailyReading);
 
   }
-
   
 }

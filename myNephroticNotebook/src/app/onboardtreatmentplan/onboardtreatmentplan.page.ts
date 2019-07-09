@@ -227,7 +227,6 @@ export class OnboardtreatmentplanPage implements OnInit {
     var now = moment().format('YYYY-MM-DD')+' 00:00:00'
     console.log('Date: ',now);
 
-
     var activeState = [
       this.currentState,
       now

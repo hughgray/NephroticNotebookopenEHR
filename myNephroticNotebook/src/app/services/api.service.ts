@@ -4,6 +4,7 @@ import { Platform } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
 import { FetchReadingService } from '../services/fetch-reading.service';
 import { Storage } from '@ionic/storage';
+import * as papa from 'papaparse';
 
 @Injectable({
   providedIn: 'root'
@@ -129,6 +130,9 @@ export class ApiService {
           if (data == null) {
             console.log('creating ehr')
             this.createEHRid(subjectId)
+            .then((q)=>{
+              resolve(q)
+            })
           }
           else {
  
@@ -139,8 +143,8 @@ export class ApiService {
 
           this.ehrID = info.ehrId
           console.log('ehrID:',this.ehrID)
-          this.addToDB()
-          resolve()
+          var res = 'good'
+          resolve(res)
           }
           
 
@@ -149,7 +153,8 @@ export class ApiService {
             // A client-side or network error occurred. Handle it accordingly.
             console.error('Error checking for EHR')
             console.error('An error occurred:', error.error.message);
-            resolve()
+            var res = 'error'
+            resolve(res)
           } else {
             // The backend returned an unsuccessful response code.
             // The response body may contain clues as to what went wrong,
@@ -157,7 +162,8 @@ export class ApiService {
             console.error(
               `Backend returned code ${error.status}, ` +
               `body was: ${error.error}`);
-              resolve()
+              var res = 'error'
+              resolve(res)
           }
         });
        
@@ -181,14 +187,16 @@ export class ApiService {
           this.ehrID = info.ehrId
           console.log('ehrID:',this.ehrID)
           this.addToDB()
-          resolve()
+          var res = 'good'
+          resolve(res)
 
         }, error => {
           if (error.error instanceof ErrorEvent) {
             // A client-side or network error occurred. Handle it accordingly.
             console.error('Error creating new EHR')
             console.error('An error occurred:', error.error.message);
-            resolve()
+            var res = 'error'
+            resolve(res)
           } else {
             // The backend returned an unsuccessful response code.
             // The response body may contain clues as to what went wrong,
@@ -196,7 +204,8 @@ export class ApiService {
             console.error(
               `Backend returned code ${error.status}, ` +
               `body was: ${error.error}`);
-              resolve()
+              var res = 'error'
+            resolve(res)
           }
         });
 
@@ -208,7 +217,7 @@ export class ApiService {
         "ehr_id": this.ehrID,
       }
       this.database.insertData(ehrid, "profileEHRid"); 
-      console.log('EHR ID: ', this.ehrID);
+      console.log('EHR ID added to db: ', this.ehrID);
     }
 
     public getEHRstatusUpdate(subjectId): Promise<any> {
@@ -621,6 +630,69 @@ export class ApiService {
 
       });
     }
+
+    public getData(ehrID,startdate,enddate): Promise<any> {
+      return new Promise(resolve => {
+  
+        let commitDailyComp = `${this.cdrRestBaseUrl}/query`
+
+        var aql = `select 
+                    a/context/start_time/value as date, 
+                    b_a/data[at0001]/events[at0002]/data[at0003]/items[at0095]/value/value as readingNumeric, 
+                    b_a/data[at0001]/events[at0002]/data[at0003]/items[at0095]/value/symbol/value as reading, 
+                    b_b/items[at0001]/value/value as nephroticStatus, b_d/items[at0144]/value/magnitude as doseAmount, 
+                    b_d/items[at0145]/value/defining_code/code_string as doseAmountUnit, 
+                    b_c/description[at0017]/items[at0020]/value/value as medicationAdministered, 
+                    b_c/ism_transition/careflow_step/value as doseAdminStepValue, 
+                    b_c/ism_transition/careflow_step/defining_code/code_string as doseAdminStepCode, 
+                    b_c/description[at0017]/items[at0021]/value/value as regime, 
+                    b_c/description[at0017]/items[at0024]/value/value as comment 
+                  from EHR e[ehr_id/value='${ehrID}'] 
+                  contains COMPOSITION a[openEHR-EHR-COMPOSITION.self_monitoring.v0] 
+                  contains (OBSERVATION b_a[openEHR-EHR-OBSERVATION.urinalysis.v1] 
+                    or CLUSTER b_b[openEHR-EHR-CLUSTER.nephrotic_syndrome_status.v0] 
+                    or ACTION b_c[openEHR-EHR-ACTION.medication.v1] or CLUSTER b_d[openEHR-EHR-CLUSTER.dosage.v1]) 
+                  where a/name/value='Nephrotic syndrome self monitoring' 
+                  and date >= '${startdate}'
+                  and date <= '${enddate}'
+                  order by date DESC`
+        
+        var query = {"aql" : aql}
+        console.log("Query as json?: ",query)
+
+        this.http.post(commitDailyComp, query, this.requestOptions)
+        .subscribe(data => {
+
+          if (data == null) {
+            console.log("Data null- bad news");
+            resolve()
+          }
+          else {
+            console.log("Query returns:", JSON.stringify(data));
+            resolve(data)
+          }
+
+        }, error => {
+          if (error.error instanceof ErrorEvent) {
+            // A client-side or network error occurred. Handle it accordingly.
+            console.error('An error occurred:', error.error.message);
+            resolve()
+
+          } else {
+            // The backend returned an unsuccessful response code.
+            // The response body may contain clues as to what went wrong,
+            console.error(
+              `Backend returned code ${error.status}, ` +
+              `body was:`, JSON.stringify(error.error));
+              resolve()
+          }
+        });
+
+      });
+    }
+
+
+
 
 
 
