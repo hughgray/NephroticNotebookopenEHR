@@ -225,7 +225,11 @@ export class ExportlogPage implements OnInit {
     var resultsData = this.jsonData.resultSet;
     console.log("just results set?:",resultsData)
 
-    this.csvJSON = papa.unparse(resultsData);
+    this.csvJSON = papa.unparse({
+      fields: ["date", "reading", "readingNumeric", "doseAmount", "doseAmountUnit", 
+               "medicationAdministered", "doseAdminStepValue", "regime", "comment"],
+      data: resultsData
+    });
     console.log("JSON csv", this.csvJSON);
 
     let resultJson = this.file.createDir(this.file.dataDirectory, this.dirNameJson, true);

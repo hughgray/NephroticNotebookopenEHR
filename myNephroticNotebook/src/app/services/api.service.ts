@@ -643,8 +643,7 @@ export class ApiService {
                     b_b/items[at0001]/value/value as nephroticStatus, b_d/items[at0144]/value/magnitude as doseAmount, 
                     b_d/items[at0145]/value/defining_code/code_string as doseAmountUnit, 
                     b_c/description[at0017]/items[at0020]/value/value as medicationAdministered, 
-                    b_c/ism_transition/careflow_step/value as doseAdminStepValue, 
-                    b_c/ism_transition/careflow_step/defining_code/code_string as doseAdminStepCode, 
+                    b_c/ism_transition/careflow_step/value as doseAdminStepValue,
                     b_c/description[at0017]/items[at0021]/value/value as regime, 
                     b_c/description[at0017]/items[at0024]/value/value as comment 
                   from EHR e[ehr_id/value='${ehrID}'] 
