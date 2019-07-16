@@ -323,7 +323,7 @@ export class OnboardtreatmentplanPage implements OnInit {
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/medication_item|value": "Product containing prednisolone",
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/medication_item|terminology": "SNOMED-CT",
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/clinical_indication:0": "Nephrotic syndrome Maintenance",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/direction_sequence": 1,
+      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/direction_sequence": "1",
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/direction_duration/coded_text_value|code": "at0067",
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/dosage/dose_amount|magnitude": this.treatmentForm.value.maintenanceDose,
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/dosage/dose_amount|unit": "1",
@@ -334,7 +334,7 @@ export class OnboardtreatmentplanPage implements OnInit {
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/dosage/dose_unit|terminology": "UCUM",
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/repetition_timing/interval": "P"+this.treatmentForm.value.maintenanceInterval+"D",
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/clinical_indication:1": "Nephrotic syndrome Relapse",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/direction_sequence": 2,
+      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/direction_sequence": "2",
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/direction_duration/coded_text_value|code": "at0067",
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/dosage/dose_amount|magnitude": this.treatmentForm.value.relapseAmount,
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/dosage/dose_amount|unit": "1",
@@ -345,7 +345,7 @@ export class OnboardtreatmentplanPage implements OnInit {
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/dosage/dose_unit|terminology": "UCUM",
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/repetition_timing/interval": "P"+this.treatmentForm.value.relapseInterval+"D",
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/clinical_indication:2": "Nephrotic syndrome Remission",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/direction_sequence": 3,
+      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/direction_sequence": "3",
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/direction_duration/duration_value": this.remissionDurIso,
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/dosage/dose_amount|magnitude": this.treatmentForm.value.remissionAmount,
       "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/dosage/dose_amount|unit": "1",
@@ -387,8 +387,11 @@ export class OnboardtreatmentplanPage implements OnInit {
 
     this.api.commitTreatmentPlan(this.ehrId, this.docName, this.treatmentPlanEHR)
     .then(() => {
-        this.router.navigateByUrl('/onboardothermeds');
+        this.api.deleteSession()
+        .then(()=>{
+          this.router.navigateByUrl('/onboardothermeds');
         // insert a catch error here if the plan does not commit
+        })
   })
 }
   

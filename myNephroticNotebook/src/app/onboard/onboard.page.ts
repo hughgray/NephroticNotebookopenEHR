@@ -175,13 +175,19 @@ export class OnboardPage implements OnInit {
 
     console.log("Checking Connection flag....");
     if (this.consent == true && this.profileForm.value.cdrProvider == 'None'){
-        this.noCdrChosen()
+      this.noCdrChosen()
     }
     else if (this.consent == true){
-        this.api.getTemplates()
+      this.storage.set("CDR", this.profileForm.value.cdrProvider)
+      .then(() => {
+        this.api.setCDRVariables()
         .then( () => {
-          return this.continueCheck();
-    })
+          this.api.getTemplates()
+          .then( () => {
+            return this.continueCheck();
+          })
+        })
+      })
     }
     else{
         this.addToDB()
@@ -201,7 +207,6 @@ export class OnboardPage implements OnInit {
           this.ehrPlay()
         }
     });
-  
   }
 
 
@@ -272,6 +277,7 @@ export class OnboardPage implements OnInit {
     "ctx/id_namespace": "NHS-APP",
     "ctx/id_scheme": "NHS-APP",
     "ctx/health_care_facility|name": "Home",
+    "ctx/health_care_facility|id": "000",
     "nephrotic_syndrome_self_monitoring/urinalysis/protein|code": "at0098",
     "nephrotic_syndrome_self_monitoring/urinalysis/protein|value": "1+",
     "nephrotic_syndrome_self_monitoring/urinalysis/protein|ordinal": 3,

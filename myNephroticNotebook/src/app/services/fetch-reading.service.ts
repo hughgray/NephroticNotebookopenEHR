@@ -153,7 +153,7 @@ export class FetchReadingService implements OnInit{
             }
 
             resolve(this.plan_details);
-            console.log("Treatment plan read: ",this.plan_details);
+            console.log("Treatment plan read: ",this.plan_details); 
 
          }) 
          .catch((error) => 

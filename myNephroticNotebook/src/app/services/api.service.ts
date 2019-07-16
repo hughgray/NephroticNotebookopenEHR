@@ -11,17 +11,12 @@ import * as papa from 'papaparse';
 })
 export class ApiService {
 
-  cdrRestBaseUrl = 'https://cdr.code4health.org/rest/v1'
   templateIdReading = 'MNNB - Nephrotic self-monitoring-v0'
   templateIdTreatment = 'MNNB - Treatment Plan'
-  headerDict = {
-    "Content-Type": "application/json",
-    "Ehr-Session-disabled": "1917e50d-65d3-4c2c-94e3-0b5d303e0b72",
-    "Authorization": "Basic YjI5ZWNhZGUtZWI2NS00NzQ4LThhNjEtMDE1NjQyMWMyNmFkOiQyYSQxMCQ2MTlraQ==" };
-
-  requestOptions = {                                                                                                                                                                                 
-    headers: new HttpHeaders(this.headerDict), 
-  };
+  
+  headerDict: {};
+  cdrRestBaseUrl: string;
+  requestOptions: {};
   ehrID: any;
   compUid: any;
   subjectNamespace = 'uk.nhs.nhs_number';
@@ -32,9 +27,120 @@ export class ApiService {
   jsonReading: any;
   myName: string;
   ehrId: string;
+  sessionId: string;
 
   constructor(public fetchReading:FetchReadingService, private storage: Storage, private http: HttpClient, public platform: Platform, private database:DatabaseService) { }
 
+  public setCDRVariables(): Promise<any> {
+    return new Promise(resolve => {
+      this.storage.get("CDR")
+      .then((data) =>{
+        if (data == "Gosh"){
+          this.headerDict = {
+            "Content-Type": "application/json",
+            "Ehr-Session-disabled": "1917e50d-65d3-4c2c-94e3-0b5d303e0b72",
+            "Authorization": "Basic YjI5ZWNhZGUtZWI2NS00NzQ4LThhNjEtMDE1NjQyMWMyNmFkOiQyYSQxMCQ2MTlraQ==" };
+          this.cdrRestBaseUrl = 'https://cdr.code4health.org/rest/v1'
+          this.requestOptions = {                                                                                                                                                                                 
+            headers: new HttpHeaders(this.headerDict), 
+          };
+          console.log('CDR details set to marand:')
+          console.log('URL: ',this.cdrRestBaseUrl)
+          console.log('Headers: ',JSON.stringify(this.headerDict))
+          resolve()
+
+        } 
+        else {
+          this.createSession()
+          .then (()=>{
+            this.headerDict = {
+            "Content-Type": "application/json",
+            "Ehr-Session": this.sessionId};
+            this.cdrRestBaseUrl = 'http://localhost:8081/rest/v1'
+            this.requestOptions = {                                                                                                                                                                                 
+              headers: new HttpHeaders(this.headerDict), 
+            };
+            console.log('CDR details set to ethersis:')
+            console.log('URL: ',this.cdrRestBaseUrl)
+            console.log('Headers: ',JSON.stringify(this.headerDict))
+            resolve()
+          })
+        }
+      })
+    })
+  }
+  
+  public createSession(): Promise<any> {
+    return new Promise(resolve => {
+
+      let createSesh = `http://localhost:8081/rest/v1/session?username=guest&password=guest`
+      
+      this.http.post(createSesh, {})
+      .subscribe(data => {
+        console.log(data);
+        var json = JSON.stringify(data)
+        var info = JSON.parse(json)
+
+        this.sessionId = info.sessionId
+        console.log('sessionID:',this.sessionId)
+        var res = 'good'
+        resolve(res)
+
+      }, error => {
+        if (error.error instanceof ErrorEvent) {
+          // A client-side or network error occurred. Handle it accordingly.
+          console.log('Session create Bad 1!')
+          console.error('An error occurred:', error.error.message);
+          resolve()
+        } else {
+          // The backend returned an unsuccessful response code.
+          // The response body may contain clues as to what went wrong,
+          console.log('Session create Bad 2!')
+          console.error(
+            `Backend returned code ${error.status}, ` +
+            `body was: ${error.error}`);
+            resolve()
+        }
+      });
+    
+    });
+  }
+
+  public deleteSession(): Promise<any> {
+    return new Promise(resolve => {
+
+      let deleteSesh = `${this.cdrRestBaseUrl}/session`
+      
+      this.http.delete(deleteSesh, {})
+      .subscribe(data => {
+        console.log(data);
+        var json = JSON.stringify(data)
+        var info = JSON.parse(json)
+        console.log('Session:',info.action)
+        var res = 'good'
+        resolve(res)
+
+      }, error => {
+        if (error.error instanceof ErrorEvent) {
+          // A client-side or network error occurred. Handle it accordingly.
+          console.log('Session delete Bad 1!')
+          console.error('An error occurred:', error.error.message);
+          resolve()
+        } else {
+          // The backend returned an unsuccessful response code.
+          // The response body may contain clues as to what went wrong,
+          console.log('Session delete Bad 2!')
+          console.error(
+            `Backend returned code ${error.status}, ` +
+            `body was: ${error.error}`);
+          resolve()
+        }
+      });
+    
+    });
+  }
+
+  
   public getTemplates(): Promise<any> {
     return new Promise(resolve => {
 
@@ -153,8 +259,10 @@ export class ApiService {
             // A client-side or network error occurred. Handle it accordingly.
             console.error('Error checking for EHR')
             console.error('An error occurred:', error.error.message);
-            var res = 'error'
-            resolve(res)
+            this.createEHRid(subjectId)
+            .then((q)=>{
+              resolve(q)
+            })
           } else {
             // The backend returned an unsuccessful response code.
             // The response body may contain clues as to what went wrong,
@@ -162,8 +270,10 @@ export class ApiService {
             console.error(
               `Backend returned code ${error.status}, ` +
               `body was: ${error.error}`);
-              var res = 'error'
-              resolve(res)
+            this.createEHRid(subjectId)
+            .then((q)=>{
+              resolve(q)
+            })
           }
         });
        
