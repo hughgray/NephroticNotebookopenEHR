@@ -179,7 +179,7 @@ export class OnboardPage implements OnInit {
     }
     else if (this.consent == true){
       this.storage.set("CDR", this.profileForm.value.cdrProvider)
-      .then(() => {
+      .then(() => { 
         this.api.setCDRVariables()
         .then( () => {
           this.api.getTemplates()

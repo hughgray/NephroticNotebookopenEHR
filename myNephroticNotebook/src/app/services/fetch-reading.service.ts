@@ -1,4 +1,3 @@
-
 import { Injectable, OnInit} from '@angular/core';
 import { Http } from '@angular/http';
 import {DatabaseService} from '../services/database.service';

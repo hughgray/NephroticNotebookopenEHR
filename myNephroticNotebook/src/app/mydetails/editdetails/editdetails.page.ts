@@ -174,16 +174,22 @@ export class EditdetailsPage implements OnInit {
 
     console.log("Checking Connection flag....");
     if (this.consent == true && this.profileForm.value.cdrProvider == 'None'){
-        this.noCdrChosen()
+      this.noCdrChosen()
     }
     else if (this.consent == true){
-        this.api.getTemplates()
+      this.storage.set("CDR", this.profileForm.value.cdrProvider)
+      .then(() => { 
+        this.api.setCDRVariables()
         .then( () => {
-          return this.continueCheck();
-    })
+          this.api.getTemplates()
+          .then( () => {
+            return this.continueCheck();
+          })
+        })
+      })
     }
     else{
-        this.continueCheck()
+        this.addToDB()
     }
   }
 
@@ -197,10 +203,9 @@ export class EditdetailsPage implements OnInit {
         }
         else{
           console.log("did that work?");
-          this.addToDB()
+          this.ehrPlay()
         }
     });
-  
   }
 
 
@@ -232,19 +237,31 @@ export class EditdetailsPage implements OnInit {
       this.profileForm.value.cdrProvider
     ]
 
-    this.database.insertData(myProfileDetailsBetter, "profileUpdate");
     console.log('Checker: ', myProfileDetailsBetter);
-
-    if (this.consent == true){
-      this.api.getEHRstatus(this.profileForm.value.myNHSno)
-      .then(()=>{ 
+    this.database.insertData(myProfileDetailsBetter, "profileUpdate")
+    .then(()=>{
+      if (this.consent == true){
+        this.api.addToDB()
         this.router.navigateByUrl('/tabs/tab3');
-      })
-    }
-    else {
-      this.router.navigateByUrl('/tabs/tab3');
-    }
+      }
+      else{
+        this.router.navigateByUrl('/tabs/tab3');
+      }
+    })
 
+  } 
+
+  ehrPlay(){
+
+    this.api.getEHRstatus(this.profileForm.value.myNHSno)
+    .then((data)=>{ 
+      if (data == 'error'){
+        this.noNetworkConnection
+      }
+      else {
+        this.addToDB()
+      }
+    })
   } 
 
   goBack(){

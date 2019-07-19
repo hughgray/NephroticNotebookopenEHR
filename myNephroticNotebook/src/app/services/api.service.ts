@@ -109,7 +109,7 @@ export class ApiService {
   public deleteSession(): Promise<any> {
     return new Promise(resolve => {
 
-      let deleteSesh = `${this.cdrRestBaseUrl}/session`
+      let deleteSesh = `http://localhost:8081/rest/v1/session`
       
       this.http.delete(deleteSesh, {})
       .subscribe(data => {
