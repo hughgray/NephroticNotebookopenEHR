@@ -33,7 +33,11 @@
   <ion-button [disabled]="!dataLogForm.valid" position="center" shape="round" routerDirection="forward" (click)="submit()" >
     <ion-icon slot="end" name="send"></ion-icon>
   Compose email
-</ion-button>
-</div>
+  </ion-button>
+  </div>
+
+  <div *ngFor="let value of prevDates" style="padding-top: 10%">
+      <h5>Your last data log export was between {{ value.oldStart }} and {{ value.oldEnd }}</h5>
+  </div>
 
 </ion-content>

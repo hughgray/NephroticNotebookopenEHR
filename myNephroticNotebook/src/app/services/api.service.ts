@@ -110,8 +110,15 @@ export class ApiService {
     return new Promise(resolve => {
 
       let deleteSesh = `http://localhost:8081/rest/v1/session`
+
+      var deleteHeaderDict = {
+        "Content-Type": "application/json",
+        "Ehr-Session": this.sessionId};
+       var deleteOptions = {                                                                                                                                                                                 
+        headers: new HttpHeaders(deleteHeaderDict), 
+      };
       
-      this.http.delete(deleteSesh, {})
+      this.http.delete(deleteSesh, deleteOptions)
       .subscribe(data => {
         console.log(data);
         var json = JSON.stringify(data)
@@ -746,28 +753,11 @@ export class ApiService {
   
         let commitDailyComp = `${this.cdrRestBaseUrl}/query`
 
-        var aql = `select 
-                    a/context/start_time/value as date, 
-                    b_a/data[at0001]/events[at0002]/data[at0003]/items[at0095]/value/value as readingNumeric, 
-                    b_a/data[at0001]/events[at0002]/data[at0003]/items[at0095]/value/symbol/value as reading, 
-                    b_b/items[at0001]/value/value as nephroticStatus, b_d/items[at0144]/value/magnitude as doseAmount, 
-                    b_d/items[at0145]/value/defining_code/code_string as doseAmountUnit, 
-                    b_c/description[at0017]/items[at0020]/value/value as medicationAdministered, 
-                    b_c/ism_transition/careflow_step/value as doseAdminStepValue,
-                    b_c/description[at0017]/items[at0021]/value/value as regime, 
-                    b_c/description[at0017]/items[at0024]/value/value as comment 
-                  from EHR e[ehr_id/value='${ehrID}'] 
-                  contains COMPOSITION a[openEHR-EHR-COMPOSITION.self_monitoring.v0] 
-                  contains (OBSERVATION b_a[openEHR-EHR-OBSERVATION.urinalysis.v1] 
-                    or CLUSTER b_b[openEHR-EHR-CLUSTER.nephrotic_syndrome_status.v0] 
-                    or ACTION b_c[openEHR-EHR-ACTION.medication.v1] or CLUSTER b_d[openEHR-EHR-CLUSTER.dosage.v1]) 
-                  where a/name/value='Nephrotic syndrome self monitoring' 
-                  and date >= '${startdate}'
-                  and date <= '${enddate}'
-                  order by date DESC`
-        
+        var aql = `select a/context/start_time/value as date, b_a/data[at0001]/events[at0002]/data[at0003]/items[at0095]/value/value as reading,b_b/items[at0001]/value/value as nephroticStatus, b_d/items[at0144]/value/magnitude as doseAmount, b_d/items[at0145]/value/defining_code/code_string as doseAmountUnit, b_c/description[at0017]/items[at0020]/value/value as medicationAdministered, b_c/ism_transition/careflow_step/value as doseAdminStepValue, b_c/description[at0017]/items[at0021]/value/value as regime, b_c/description[at0017]/items[at0024]/value/value as comment from EHR e[ehr_id/value='${ehrID}'] contains COMPOSITION a[openEHR-EHR-COMPOSITION.self_monitoring.v0] contains (OBSERVATION b_a[openEHR-EHR-OBSERVATION.urinalysis.v1] or CLUSTER b_b[openEHR-EHR-CLUSTER.nephrotic_syndrome_status.v0] or ACTION b_c[openEHR-EHR-ACTION.medication.v1] or CLUSTER b_d[openEHR-EHR-CLUSTER.dosage.v1]) where a/name/value='Nephrotic syndrome self monitoring' and a/context/start_time/value >= '${startdate}'and a/context/start_time/value <= '${enddate}'order by date DESC`
+                  
+        console.log("Query alone:",aql)
         var query = {"aql" : aql}
-        console.log("Query as json?: ",query)
+        console.log("Query as json?: ", JSON.stringify(query))
 
         this.http.post(commitDailyComp, query, this.requestOptions)
         .subscribe(data => {

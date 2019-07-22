@@ -36,6 +36,10 @@ export class ExportlogPage implements OnInit {
   possiblePathJson: any = null;
   startdate: any 	= null;
   enddate: any 	= null;
+  oldStart: string;
+  oldEnd: string;
+  prevExport: any;
+  prevDates = [];
 
   error_messages = {
     'dateFrom': [
@@ -56,9 +60,33 @@ export class ExportlogPage implements OnInit {
         Validators.required
       ]))
     });
+    this.prevDates = [];
   }
 
   ngOnInit(){
+
+    this.storage.get('export')
+    .then((v)=>{
+      if (v == 1){
+        this.prevExport = 1
+      }
+      this.storage.get("Start")
+      .then((val)=>{
+        if (val) {
+          this.oldStart = val
+          console.log('last start', this.oldStart)
+        }
+      })
+      this.storage.get("End")
+      .then((vals)=>{
+        if (vals) {
+          this.oldEnd = vals
+          console.log('last end', this.oldEnd)
+          this.prevDates.push({start: this.oldStart, end: this.oldEnd});
+          console.log('together', this.prevDates)
+        }
+      })
+    })
     this.presentAlertConfirm()
   }
 
@@ -93,6 +121,8 @@ export class ExportlogPage implements OnInit {
     console.log('To: ', this.dataLogForm.value.dateTo);
     this.startdate=this.dataLogForm.value.dateFrom.split('T',2)[0];
     this.enddate=this.dataLogForm.value.dateTo.split('T',2)[0];
+    this.storage.set("Start", this.startdate);
+    this.storage.set("End", this.enddate);
     this.checkConsent()
 
   } 
@@ -108,13 +138,20 @@ export class ExportlogPage implements OnInit {
         }
         else{
           console.log('ehrID exists so they consent')
-          this.getEhrId()
+          this.api.setCDRVariables()
+          .then(()=>{
+            this.api.getTemplates()
+          .then(() => {
+            this.checkConnection()
+          })
+          })
         }
     });
   }
 
   public getDataLog(dateFrom, dateTo) : void
    {  	
+    this.storage.set('export',1)
       console.log("getDatalog reached");
       this.fetchReading
       .exportDataLog(dateFrom, dateTo)
@@ -192,6 +229,42 @@ export class ExportlogPage implements OnInit {
     this.router.navigateByUrl('tabs/tab3');
    }
 
+  checkConnection(){
+
+    this.storage.get("Connection")
+      .then((val) => {
+        console.log("val pulled from storage: ",val);
+        if (val == 0){
+          this.noNetworkConnection()
+        }
+        else{
+          console.log("Connection is g! Did that work?");
+          this.getEhrId()
+        }
+    });
+  }
+
+  async noNetworkConnection() {
+
+    const alert = await this.alertController.create({
+      header: 'CONNECTION ERROR',
+      message: 'You must be able to connect to the CDR to get your online data log. Do you wish to proceed with just local data?',
+      buttons: [{
+        text: 'No',
+        handler: () => {
+          console.log('Just local csv so...');
+          this.getDataLog(this.dataLogForm.value.dateFrom,this.dataLogForm.value.dateTo)
+        }
+      }, {
+        text: 'Yes',
+        handler: () => {
+          console.log('Try again....');
+        }
+      }]
+    })
+    await alert.present();
+  }
+
    public getEhrId()
    {  	
       console.log("getting ehrID...");
@@ -226,7 +299,7 @@ export class ExportlogPage implements OnInit {
     console.log("just results set?:",resultsData)
 
     this.csvJSON = papa.unparse({
-      fields: ["date", "reading", "readingNumeric", "doseAmount", "doseAmountUnit", 
+      fields: ["date", "reading", "doseAmount", "doseAmountUnit", 
                "medicationAdministered", "doseAdminStepValue", "regime", "comment"],
       data: resultsData
     });
@@ -243,17 +316,35 @@ export class ExportlogPage implements OnInit {
         {
           this.nativeFilePathJson = dataFile.toURL();
           console.log('JSON File exists at:', this.nativeFilePathJson) 
-          this.getDataLog(this.dataLogForm.value.dateFrom,this.dataLogForm.value.dateTo)
+          this.deleteSession()
 
         })
         .catch(error => {
           console.log('JSON File doesn\'t exist:', error);
+          console.log('Going local only....');
+          this.deleteSession()
         })
 
     })
     .catch(error => {
       console.log('JSON Directory doesn\'t exist:', error);
+      console.log('Going local only....');
+      this.deleteSession()
     })
   }
 
+  deleteSession(){
+
+    this.storage.get("CDR")
+      .then((val) => {
+        if (val != "Gosh"){
+          this.api.deleteSession()
+          .then(()=>{
+            this.getDataLog(this.dataLogForm.value.dateFrom,this.dataLogForm.value.dateTo)
+          })
+        } else {
+          this.getDataLog(this.dataLogForm.value.dateFrom,this.dataLogForm.value.dateTo)
+        }
+      })
+  }
 }

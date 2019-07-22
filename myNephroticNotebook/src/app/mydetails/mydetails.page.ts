@@ -16,7 +16,7 @@ export class MydetailsPage implements OnInit {
   constructor(private router: Router, public fetchReading:FetchReadingService) { 
 
   }
-
+ 
 
   public ngOnInit() : void
    {  	

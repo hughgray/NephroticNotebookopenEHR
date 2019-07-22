@@ -242,10 +242,10 @@ export class EditdetailsPage implements OnInit {
     .then(()=>{
       if (this.consent == true){
         this.api.addToDB()
-        this.router.navigateByUrl('/tabs/tab3');
+        this.lastPlay()
       }
       else{
-        this.router.navigateByUrl('/tabs/tab3');
+        this.lastPlay()
       }
     })
 
@@ -266,6 +266,21 @@ export class EditdetailsPage implements OnInit {
 
   goBack(){
     this.router.navigateByUrl('tabs/tab3');
+  }
+
+  lastPlay(){
+
+    this.storage.get("CDR")
+    .then((val) => {
+      if (val != "Gosh"){
+        this.api.deleteSession()
+        .then(()=>{
+          this.router.navigateByUrl('/tabs/tab3');
+        })
+      } else {
+        this.router.navigateByUrl('/tabs/tab3');
+      }
+    })
   }
 
 }

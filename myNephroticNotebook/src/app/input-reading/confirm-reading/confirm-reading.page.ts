@@ -324,41 +324,20 @@ export class ConfirmReadingPage implements OnInit {
 
     console.log('body:', this.dailyReading)
     this.checkConnection()
-
-  //   this.api.commitComposition(this.ehrId, this.myName, this.dailyReading)
-  //   .then(() => {
-  //     console.log('Get connection...');
-  //     return this.routeComp(dailyReading)
-  //   })
-  //   resolve()
-  // });
   })
   }
+
   checkConnection(){
 
     console.log("Checking Connection flag....");
+    this.api.setCDRVariables()
+    .then(()=>{
       this.api.getTemplates()
         .then( () => {
           return this.continueCheck()
+      })
     })
   }
-
-    // async routeComp(dailyReading){
-
-    //   await this.storage.get("Connection")
-    //     .then((val) => {
-    //       console.log("value pulled from storage 2: ",val);
-    //       if (val == 0){
-    //         this.api.storeReading(dailyReading)
-    //         this.router.navigate(['tabs/tab2/post-reading']);
-    //       }
-    //       else{
-    //         console.log("did that work?? Connection is good");
-    //         this.router.navigate(['tabs/tab2/post-reading']);
-    //       }
-    //   });
-
-    // }
 
   continueCheck(){
 
@@ -368,19 +347,33 @@ export class ConfirmReadingPage implements OnInit {
         if (val == 1){
           this.api.commitComposition(this.ehrId, this.myName, this.dailyReading)
           .then(()=>{
-            this.router.navigate(['tabs/tab2/post-reading'])
+            this.finalPlay()
           })
         }
         else{
           console.log("did that work?");
           this.api.storeReading(this.dailyReading)
           .then(()=>{
-            this.router.navigate(['tabs/tab2/post-reading'])
+            this.finalPlay()
           })
         
         }
     });
-  
+  }
+
+  finalPlay(){
+
+    this.storage.get("CDR")
+      .then((val) => {
+        if (val != "Gosh"){
+          this.api.deleteSession()
+          .then(()=>{
+            this.router.navigate(['tabs/tab2/post-reading'])
+          })
+        } else {
+          this.router.navigate(['tabs/tab2/post-reading'])
+        }
+      })
   }
 
 }

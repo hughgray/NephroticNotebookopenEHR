@@ -367,9 +367,12 @@ export class EditPage implements OnInit {
         }
         else{
           console.log("ehrID exists so they consent");
-          this.api.getTemplates()
+          this.api.setCDRVariables()
+          .then(()=>{
+            this.api.getTemplates()
           .then(() => {
             this.checkConnection()
+          })
           })
         }
     });
@@ -412,16 +415,18 @@ export class EditPage implements OnInit {
     this.treatmentPlanEHR = {
       "ctx/language": "en",
       "ctx/territory": "GB",
-      "ctx/composer_name": this.docName,
-      "ctx/composer_id": this.docID,
-      "ctx/id_namespace": "HOSPITAL-NS",
-      "ctx/id_scheme": "HOSPITAL-NS",
-      "ctx/health_care_facility|name": "Hospital",
-      "ctx/health_care_facility|id": "9091",
       "nephrotic_syndrome_treatment_plan/composer|id": this.docID,
-      "nephrotic_syndrome_treatment_plan/composer|id_scheme": "GMC",
+      "nephrotic_syndrome_treatment_plan/composer|id_scheme": this.typeID,
       "nephrotic_syndrome_treatment_plan/composer|id_namespace": this.typeID + "Number",
       "nephrotic_syndrome_treatment_plan/composer|name": this.treatmentForm.value.doctorsName,
+      "nephrotic_syndrome_treatment_plan/event_context/_health_care_facility|id": "123456-123",
+      "nephrotic_syndrome_treatment_plan/event_context/_health_care_facility|id_scheme": "ETHERCIS-SCHEME",
+      "nephrotic_syndrome_treatment_plan/event_context/_health_care_facility|id_namespace": "DEMOGRAPHIC",
+      "nephrotic_syndrome_treatment_plan/event_context/_health_care_facility|name": "FACILITY",
+      "nephrotic_syndrome_treatment_plan/event_context/start_time": this.nowT,
+      "nephrotic_syndrome_treatment_plan/event_context/setting|code": "238",
+      "nephrotic_syndrome_treatment_plan/event_context/setting|value": "Other Care",
+      "nephrotic_syndrome_treatment_plan/event_context/setting|terminology": "openehr",
       "nephrotic_syndrome_treatment_plan/care_team/name": "Nephrotic syndrome team",
       "nephrotic_syndrome_treatment_plan/care_team/participant:0/role": "Lead clinician",
       "nephrotic_syndrome_treatment_plan/care_team/participant:0/lead_clinician:0/identifier:0/value": this.docID,
@@ -437,60 +442,74 @@ export class EditPage implements OnInit {
       "nephrotic_syndrome_treatment_plan/informed_consent/ism_transition/careflow_step|value": "Informed Consent Provided",
       "nephrotic_syndrome_treatment_plan/informed_consent/consent_name": "Consent to Treatment plan and sharing information to EHR",
       "nephrotic_syndrome_treatment_plan/informed_consent/time": this.nowT,
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/medication_item|code": "52388000",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/medication_item|value": "Product containing prednisolone",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/medication_item|terminology": "SNOMED-CT",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/clinical_indication:0": "Nephrotic syndrome Maintenance",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/direction_sequence": 1,
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/direction_duration/coded_text_value|code": "at0067",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/dosage/dose_amount|magnitude": this.treatmentForm.value.maintenanceDose,
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/dosage/dose_amount|unit": "1",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/dosage/dose_unit|code": "mg",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/dosage/dose_unit|value": "mg",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/dosage/daily_timing/frequency|magnitude": this.treatmentForm.value.maintenanceTimes,
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/dosage/daily_timing/frequency|unit": "1/d",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/dosage/dose_unit|terminology": "UCUM",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:0/repetition_timing/interval": "P"+this.treatmentForm.value.maintenanceInterval+"D",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/clinical_indication:1": "Nephrotic syndrome Relapse",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/direction_sequence": 2,
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/direction_duration/coded_text_value|code": "at0067",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/dosage/dose_amount|magnitude": this.treatmentForm.value.relapseAmount,
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/dosage/dose_amount|unit": "1",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/dosage/dose_unit|code": "mg",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/dosage/dose_unit|value": "mg",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/dosage/daily_timing/frequency|magnitude": this.treatmentForm.value.relapseTimes,
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/dosage/daily_timing/frequency|unit": "1/d",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/dosage/dose_unit|terminology": "UCUM",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:1/repetition_timing/interval": "P"+this.treatmentForm.value.relapseInterval+"D",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/clinical_indication:2": "Nephrotic syndrome Remission",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/direction_sequence": 3,
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/direction_duration/duration_value": this.remissionDurIso,
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/dosage/dose_amount|magnitude": this.treatmentForm.value.remissionAmount,
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/dosage/dose_amount|unit": "1",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/dosage/dose_unit|code": "mg",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/dosage/dose_unit|value": "mg",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/dosage/daily_timing/frequency|magnitude": this.treatmentForm.value.remissionTimes,
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/dosage/daily_timing/frequency|unit": "1/d",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/dosage/dose_unit|terminology": "UCUM",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:2/repetition_timing/interval": "P"+this.treatmentForm.value.remissionInterval+"D",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/order/timing": this.now,
-      "nephrotic_syndrome_treatment_plan/treatment_plan/expiry_time": "2099-01-01T00:00:00.00Z",
-      "nephrotic_syndrome_treatment_plan/treatment_plan/narrative": "Human readable instruction narrative"
+      "nephrotic_syndrome_treatment_plan/language|code": "en",
+      "nephrotic_syndrome_treatment_plan/language|terminology": "ISO_639-1",
+      "nephrotic_syndrome_treatment_plan/territory|code": "GB",
+      "nephrotic_syndrome_treatment_plan/territory|terminology": "ISO_3166-1",
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/medication_item|code": "52388000",
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/medication_item|value": "Product containing prednisolone",
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/medication_item|terminology": "SNOMED-CT",
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/clinical_indication:0": "Nephrotic syndrome Maintenance",
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/therapeutic_direction:0/direction_sequence": 1,
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/therapeutic_direction:0/dosage/dose_amount|magnitude": this.treatmentForm.value.maintenanceDose,
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/therapeutic_direction:0/dosage/dose_amount|unit": "1",
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/therapeutic_direction:0/dosage/dose_unit|code": "mg",
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/therapeutic_direction:0/dosage/dose_unit|value": "mg",
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/therapeutic_direction:0/dosage/daily_timing/frequency|magnitude": this.treatmentForm.value.maintenanceTimes,
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/therapeutic_direction:0/dosage/daily_timing/frequency|unit": "1/d",
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/therapeutic_direction:0/dosage/dose_unit|terminology": "UCUM",
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/therapeutic_direction:0/repetition_timing/interval": "P"+this.treatmentForm.value.maintenanceInterval+"D",
+      "nephrotic_syndrome_treatment_plan/medication_order:0/order/timing": this.now,
+      // "nephrotic_syndrome_treatment_plan/medication_order:0/expiry_time": "2099-01-01T00:00:00.00Z",
+      "nephrotic_syndrome_treatment_plan/medication_order:0/narrative": "Nephrotic syndrome Maintenance",
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/medication_item|code": "52388000",
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/medication_item|value": "Product containing prednisolone",
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/medication_item|terminology": "SNOMED-CT",
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/clinical_indication:0": "Nephrotic syndrome Relapse",
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/therapeutic_direction:0/direction_sequence": 2,
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/therapeutic_direction:0/dosage/dose_amount|magnitude": this.treatmentForm.value.relapseAmount,
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/therapeutic_direction:0/dosage/dose_amount|unit": "1",
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/therapeutic_direction:0/dosage/dose_unit|code": "mg",
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/therapeutic_direction:0/dosage/dose_unit|value": "mg",
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/therapeutic_direction:0/dosage/daily_timing/frequency|magnitude": this.treatmentForm.value.relapseTimes,
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/therapeutic_direction:0/dosage/daily_timing/frequency|unit": "1/d",
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/therapeutic_direction:0/dosage/dose_unit|terminology": "UCUM",
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/therapeutic_direction:0/repetition_timing/interval": "P"+this.treatmentForm.value.relapseInterval+"D",
+      "nephrotic_syndrome_treatment_plan/medication_order:1/order/timing": this.now,
+      // "nephrotic_syndrome_treatment_plan/medication_order:1/expiry_time": "2099-01-01T00:00:00.00Z",
+      "nephrotic_syndrome_treatment_plan/medication_order:1/narrative": "Nephrotic syndrome Relpase",
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/medication_item|code": "52388000",
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/medication_item|value": "Product containing prednisolone",
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/medication_item|terminology": "SNOMED-CT",
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/clinical_indication:0": "Nephrotic syndrome Remission",
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:0/direction_sequence": 3,
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:0/direction_duration": this.remissionDurIso,
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:0/dosage/dose_amount|magnitude": this.treatmentForm.value.remissionAmount,
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:0/dosage/dose_amount|unit": "1",
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:0/dosage/dose_unit|code": "mg",
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:0/dosage/dose_unit|value": "mg",
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:0/dosage/daily_timing/frequency|magnitude": this.treatmentForm.value.remissionTimes,
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:0/dosage/daily_timing/frequency|unit": "1/d",
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:0/dosage/dose_unit|terminology": "UCUM",
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:0/repetition_timing/interval": "P"+this.treatmentForm.value.remissionInterval+"D",
+      "nephrotic_syndrome_treatment_plan/medication_order:2/order/timing": this.now,
+      // "nephrotic_syndrome_treatment_plan/medication_order:2/expiry_time": "2099-01-01T00:00:00.00Z",
+      "nephrotic_syndrome_treatment_plan/medication_order:2/narrative": "Human readable instruction narrative"
   }
 
   for (var i = 3; i < this.treatmentPlanCdr.length+3; i++){ 
 
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/treatment_plan/order/clinical_indication:"+i] = "Nephrotic syndrome Remission";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:"+i+"/direction_sequence"] = i+1;
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:"+i+"/direction_duration/duration_value"] = "P"+this.treatmentPlanCdr[i-3][1]+"D";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:"+i+"/dosage/dose_amount|magnitude"] = this.treatmentPlanCdr[i-3][2];
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:"+i+"/dosage/dose_amount|unit"] = "1";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:"+i+"/dosage/dose_unit|code"] = "mg";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:"+i+"/dosage/dose_unit|value"] = "mg";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:"+i+"/dosage/daily_timing/frequency|magnitude"] = this.treatmentPlanCdr[i-3][3];
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:"+i+"/dosage/daily_timing/frequency|unit"] = "1/d";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:"+i+"/dosage/dose_unit|terminology"] = "UCUM";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/treatment_plan/order/therapeutic_direction:"+i+"/repetition_timing/interval"] = "P"+this.treatmentPlanCdr[i-3][4]+"D"
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/clinical_indication:"+i] = "Nephrotic syndrome Remission";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/direction_sequence"] = i+1;
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/direction_duration"] = "P"+this.treatmentPlanCdr[i-3][1]+"D";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/dose_amount|magnitude"] = this.treatmentPlanCdr[i-3][2];
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/dose_amount|unit"] = "1";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/dose_unit|code"] = "mg";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/dose_unit|value"] = "mg";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/daily_timing/frequency|magnitude"] = this.treatmentPlanCdr[i-3][3];
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/daily_timing/frequency|unit"] = "1/d";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/dose_unit|terminology"] = "UCUM";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/repetition_timing/interval"] = "P"+this.treatmentPlanCdr[i-3][4]+"D"
 
   };
 
@@ -521,15 +540,23 @@ export class EditPage implements OnInit {
     var myDoc = {
       "doctor_name": this.treatmentForm.value.doctorsName,
     }
-    this.database.insertData(myDoc, "profileDoc");
-
-    this.api.commitNewTreatmentPlan(this.uid, this.treatmentPlanEHR)
-    .then(() => {
-      // deal with failure of plan submission here- catch error
-      console.log('New Plan Sent');
-      this.localOnly()
+    this.database.insertData(myDoc, "profileDoc")
+    .then(()=>{
+      this.api.commitNewTreatmentPlan(this.uid, this.treatmentPlanEHR)
+      .then(() => {
+        this.storage.get("CDR")
+        .then((val) => {
+          if (val != "Gosh"){
+            this.api.deleteSession()
+            .then(()=>{
+              this.localOnly()
+            })
+          } else {
+            this.localOnly()
+          }
+        })
+      })
     })
-
   }
 
 }
