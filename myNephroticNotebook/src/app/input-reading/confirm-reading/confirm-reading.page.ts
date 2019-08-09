@@ -11,7 +11,7 @@ import { FetchReadingService } from '../../services/fetch-reading.service';
   templateUrl: './confirm-reading.page.html',
   styleUrls: ['./confirm-reading.page.scss'],
 })
-export class ConfirmReadingPage implements OnInit {
+export class ConfirmReadingPage implements OnInit { 
   private sub: any;
   public user_comment: string;
   reading: string;

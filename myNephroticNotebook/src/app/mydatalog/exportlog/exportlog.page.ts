@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵConsole } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FetchReadingService } from '../../services/fetch-reading.service';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
@@ -36,10 +36,10 @@ export class ExportlogPage implements OnInit {
   possiblePathJson: any = null;
   startdate: any 	= null;
   enddate: any 	= null;
-  oldStart: string;
-  oldEnd: string;
+  oldStart = null;
+  oldEnd =  null;
   prevExport: any;
-  prevDates = [];
+  public prevDatessss	  : any 	= null; 
 
   error_messages = {
     'dateFrom': [
@@ -47,6 +47,13 @@ export class ExportlogPage implements OnInit {
     ],
     'dateTo': [
       { type: 'required', message: 'This date is needed too!' }
+    ]
+  }
+
+  prevDates = {
+    'date': [
+      {start: this.oldStart,
+      end: this.oldEnd }
     ]
   }
 
@@ -60,34 +67,31 @@ export class ExportlogPage implements OnInit {
         Validators.required
       ]))
     });
-    this.prevDates = [];
   }
 
   ngOnInit(){
 
-    this.storage.get('export')
-    .then((v)=>{
-      if (v == 1){
-        this.prevExport = 1
-      }
-      this.storage.get("Start")
-      .then((val)=>{
-        if (val) {
-          this.oldStart = val
-          console.log('last start', this.oldStart)
-        }
-      })
-      this.storage.get("End")
-      .then((vals)=>{
-        if (vals) {
-          this.oldEnd = vals
-          console.log('last end', this.oldEnd)
-          this.prevDates.push({start: this.oldStart, end: this.oldEnd});
-          console.log('together', this.prevDates)
-        }
-      })
-    })
+    this.loadItems()
     this.presentAlertConfirm()
+  }
+
+  loadItems(){
+   
+    this.storage.get("PrevExport")
+    .then((val)=>{
+      if (val !== null) {
+        this.oldStart = val['start']
+        this.oldEnd = val['end']
+        console.log('last start', this.oldStart)
+        console.log('last end', this.oldEnd)
+        this.prevDatessss.push({
+          start: this.oldStart,
+          end: this.oldEnd
+        });
+        console.log('both', JSON.stringify(this.prevDatessss))
+        console.log('start:', this.prevDatessss.start)
+      }
+    })
   }
 
   async presentAlertConfirm() {
@@ -121,8 +125,8 @@ export class ExportlogPage implements OnInit {
     console.log('To: ', this.dataLogForm.value.dateTo);
     this.startdate=this.dataLogForm.value.dateFrom.split('T',2)[0];
     this.enddate=this.dataLogForm.value.dateTo.split('T',2)[0];
-    this.storage.set("Start", this.startdate);
-    this.storage.set("End", this.enddate);
+    let exportDates = { "start": this.startdate, "end": this.enddate }; 
+    this.storage.set("PrevExport", exportDates)
     this.checkConsent()
 
   } 
@@ -304,6 +308,11 @@ export class ExportlogPage implements OnInit {
       data: resultsData
     });
     console.log("JSON csv", this.csvJSON);
+
+    let csvTest = papa.parse(this.csvJSON)
+    console.log("CSV JSON!!!!", csvTest);
+    console.log("CSV JSON!!!!", JSON.stringify(csvTest));
+
 
     let resultJson = this.file.createDir(this.file.dataDirectory, this.dirNameJson, true);
     resultJson.then( data => 

@@ -37,7 +37,7 @@ export class MydetailsPage implements OnInit {
          console.log("my details", this.myDetails)
          console.log("my birthday", this.myBirthday)
          console.log("birthday other", this.myBirthday.date) 
-      });
+      }); 
    } 
 
    public makeArray(data : Array<any>) : void
