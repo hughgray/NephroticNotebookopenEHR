@@ -366,10 +366,10 @@ export class ConfirmReadingPage implements OnInit {
     this.storage.get("CDR")
       .then((val) => {
         if (val != "Gosh"){
-          this.api.deleteSession()
-          .then(()=>{
+          //this.api.deleteSession()
+          //.then(()=>{
             this.router.navigate(['tabs/tab2/post-reading'])
-          })
+          //})
         } else {
           this.router.navigate(['tabs/tab2/post-reading'])
         }

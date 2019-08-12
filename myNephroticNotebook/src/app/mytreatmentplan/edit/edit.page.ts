@@ -499,17 +499,17 @@ export class EditPage implements OnInit {
 
   for (var i = 3; i < this.treatmentPlanCdr.length+3; i++){ 
 
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/clinical_indication:"+i] = "Nephrotic syndrome Remission";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/direction_sequence"] = i+1;
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/direction_duration"] = "P"+this.treatmentPlanCdr[i-3][1]+"D";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/dose_amount|magnitude"] = this.treatmentPlanCdr[i-3][2];
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/dose_amount|unit"] = "1";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/dose_unit|code"] = "mg";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/dose_unit|value"] = "mg";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/daily_timing/frequency|magnitude"] = this.treatmentPlanCdr[i-3][3];
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/daily_timing/frequency|unit"] = "1/d";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/dosage/dose_unit|terminology"] = "UCUM";
-    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+i+"/repetition_timing/interval"] = "P"+this.treatmentPlanCdr[i-3][4]+"D"
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/clinical_indication:"+(i-2)] = "Nephrotic syndrome Remission";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+(i-2)+"/direction_sequence"] = i+1;
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+(i-2)+"/direction_duration"] = "P"+this.treatmentPlanCdr[i-3][1]+"D";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+(i-2)+"/dosage/dose_amount|magnitude"] = this.treatmentPlanCdr[i-3][2];
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+(i-2)+"/dosage/dose_amount|unit"] = "1";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+(i-2)+"/dosage/dose_unit|code"] = "mg";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+(i-2)+"/dosage/dose_unit|value"] = "mg";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+(i-2)+"/dosage/daily_timing/frequency|magnitude"] = this.treatmentPlanCdr[i-3][3];
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+(i-2)+"/dosage/daily_timing/frequency|unit"] = "1/d";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+(i-2)+"/dosage/dose_unit|terminology"] = "UCUM";
+    this.treatmentPlanEHR["nephrotic_syndrome_treatment_plan/medication_order:2/order/therapeutic_direction:"+(i-2)+"/repetition_timing/interval"] = "P"+this.treatmentPlanCdr[i-3][4]+"D"
 
   };
 
